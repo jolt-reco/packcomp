@@ -9,3 +9,6 @@ venv/
 
 # macOS system files
 .DS_Store
+
+# .pyv
+__pycache__/
