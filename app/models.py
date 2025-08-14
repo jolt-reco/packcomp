@@ -30,6 +30,7 @@ class Travel(db.Model):
 # バッグ
 class Bag(db.Model):
     __tablename__ = "bags"
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     name = db.Column(db.String, nullable=False)
     length_cm = db.Column(db.Float, nullable=False)
