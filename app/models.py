@@ -8,11 +8,11 @@ class User(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
 
-    travels = db.relationship("Travel", backref="user", lazy=True)
-    bags = db.relationship("Bag", backref="user", lazy=True)
-    custom_items = db.relationship("CustomItem", backref="user", lazy=True)
-    my_sets = db.relationship("MySet", backref="user", lazy=True)
-
+    travels = db.relationship("Travel", back_populates="user", cascade="all, delete-orphan")
+    bags = db.relationship("Bag", back_populates="user", cascade="all, delete-orphan")
+    custom_items = db.relationship("CustomItem", back_populates="user", cascade="all, delete-orphan")
+    my_sets = db.relationship("MySet", back_populates="user", cascade="all, delete-orphan")
+   
 # トラベル
 class Travel(db.Model):
     __tablename__ = "travels"
@@ -26,6 +26,10 @@ class Travel(db.Model):
     female_count = db.Column(db.Integer, default=0)
     child_count = db.Column(db.Integer, default=0)
     purpose = db.Column(db.String, nullable=False)
+    
+    user = db.relationship("User", back_populates="travels")
+    travel_items = db.relationship("TravelItem", back_populates="travel", cascade="all, delete-orphan")
+    packing_plans = db.relationship("PackingPlan", back_populates="travel", cascade="all, delete-orphan")
 
 # バッグ
 class Bag(db.Model):
@@ -40,6 +44,9 @@ class Bag(db.Model):
     image_path = db.Column(db.String, nullable=True)
     description = db.Column(db.String, nullable=True)
 
+    user = db.relationship("User", back_populates="bags")
+    packing_plans = db.relationship("PackingPlan", back_populates="bag", cascade="all, delete-orphan")
+
 # アイテム
 class Item(db.Model):
     __tablename__ = "items"
@@ -48,6 +55,7 @@ class Item(db.Model):
     category = db.Column(db.String, nullable=False)
     auto_gen = db.Column(db.Boolean, nullable=False)
 
+    my_set_items = db.relationship("MySetItem", back_populates="item")
 
 # カスタムアイテム
 class CustomItem(db.Model):
@@ -61,7 +69,9 @@ class CustomItem(db.Model):
     size_height_cm = db.Column(db.Float, nullable=True)
     image_path = db.Column(db.String, nullable=True)
     note = db.Column(db.String, nullable=True)
-
+    
+    user = db.relationship("User", back_populates="custom_items")
+    my_set_items = db.relationship("MySetItem", back_populates="custom_item")
 
 # マイセット
 class MySet(db.Model):
@@ -70,6 +80,8 @@ class MySet(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     name = db.Column(db.String, nullable=False)
 
+    user = db.relationship("User", back_populates="my_sets")
+    my_set_items = db.relationship("MySetItem", back_populates="my_set", cascade="all, delete-orphan")
 
 # マイセットアイテム
 class MySetItem(db.Model):
@@ -81,6 +93,10 @@ class MySetItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     note = db.Column(db.String, nullable=True)
 
+    my_set = db.relationship("MySet", back_populates="my_set_items")
+    item = db.relationship("Item", back_populates="my_set_items")
+    custom_item = db.relationship("CustomItem", back_populates="my_set_items")
+    travel_items = db.relationship("TravelItem", back_populates="my_set_item")
 
 # 旅行アイテム
 class TravelItem(db.Model):
@@ -94,6 +110,10 @@ class TravelItem(db.Model):
     note = db.Column(db.String, nullable=True)
     check_flag = db.Column(db.Boolean, nullable=False, default=False)
 
+    travel = db.relationship("Travel", back_populates="travel_items")
+    my_set_item = db.relationship("MySetItem", back_populates="travel_items")
+    item = db.relationship("Item")
+    custom_item = db.relationship("CustomItem")
 
 # パッキングプラン
 class PackingPlan(db.Model):
@@ -103,3 +123,6 @@ class PackingPlan(db.Model):
     travel_id = db.Column(db.Integer, db.ForeignKey("travels.id"), nullable=False)
     explanation = db.Column(db.String, nullable=False)
     image_path = db.Column(db.String, nullable=True)
+
+    bag = db.relationship("Bag", back_populates="packing_plans")
+    travel = db.relationship("Travel", back_populates="packing_plans")
