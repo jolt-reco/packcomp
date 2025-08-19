@@ -1,6 +1,6 @@
 from app import db
 
-# ユーザー
+# User
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -13,7 +13,7 @@ class User(db.Model):
     custom_items = db.relationship("CustomItem", back_populates="user", cascade="all, delete-orphan")
     my_sets = db.relationship("MySet", back_populates="user", cascade="all, delete-orphan")
    
-# トラベル
+# Travel
 class Travel(db.Model):
     __tablename__ = "travels"
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +31,7 @@ class Travel(db.Model):
     travel_items = db.relationship("TravelItem", back_populates="travel", cascade="all, delete-orphan")
     packing_plans = db.relationship("PackingPlan", back_populates="travel", cascade="all, delete-orphan")
 
-# バッグ
+# Bag
 class Bag(db.Model):
     __tablename__ = "bags"
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +47,7 @@ class Bag(db.Model):
     user = db.relationship("User", back_populates="bags")
     packing_plans = db.relationship("PackingPlan", back_populates="bag", cascade="all, delete-orphan")
 
-# アイテム
+# Item
 class Item(db.Model):
     __tablename__ = "items"
     id = db.Column(db.Integer, primary_key=True)
@@ -57,7 +57,7 @@ class Item(db.Model):
 
     my_set_items = db.relationship("MySetItem", back_populates="item")
 
-# カスタムアイテム
+# CustomItem
 class CustomItem(db.Model):
     __tablename__ = "custom_items"
     id = db.Column(db.Integer, primary_key=True)
@@ -73,7 +73,7 @@ class CustomItem(db.Model):
     user = db.relationship("User", back_populates="custom_items")
     my_set_items = db.relationship("MySetItem", back_populates="custom_item")
 
-# マイセット
+# MySet
 class MySet(db.Model):
     __tablename__ = "my_sets"
     id = db.Column(db.Integer, primary_key=True)
@@ -83,7 +83,7 @@ class MySet(db.Model):
     user = db.relationship("User", back_populates="my_sets")
     my_set_items = db.relationship("MySetItem", back_populates="my_set", cascade="all, delete-orphan")
 
-# マイセットアイテム
+# MySetItem
 class MySetItem(db.Model):
     __tablename__ = "my_set_items"
     id = db.Column(db.Integer, primary_key=True)
@@ -98,7 +98,7 @@ class MySetItem(db.Model):
     custom_item = db.relationship("CustomItem", back_populates="my_set_items")
     travel_items = db.relationship("TravelItem", back_populates="my_set_item")
 
-# 旅行アイテム
+# TravelItem
 class TravelItem(db.Model):
     __tablename__ = "travel_items"
     id = db.Column(db.Integer, primary_key=True)
@@ -115,7 +115,7 @@ class TravelItem(db.Model):
     item = db.relationship("Item")
     custom_item = db.relationship("CustomItem")
 
-# パッキングプラン
+# PackingPlan
 class PackingPlan(db.Model):
     __tablename__ = "packing_plans"
     id = db.Column(db.Integer, primary_key=True)
