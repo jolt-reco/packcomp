@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy import UniqueConstraint, CheckConstraint, text
 
 # User
 class User(db.Model):
@@ -98,6 +99,21 @@ class MySetItem(db.Model):
     custom_item = db.relationship("CustomItem", back_populates="my_set_items")
     travel_items = db.relationship("TravelItem", back_populates="my_set_item")
 
+__table_args__ = (
+    UniqueConstraint(
+        "my_set_id", 
+        "item_id", 
+        name="uq_myset_itemid", 
+        postgresql_where=text("item_id IS NOT NULL")
+    ), 
+    UniqueConstraint(
+        "my_set_id", 
+        "custom_item_id", 
+        name="uq_myset_customitemid", 
+        postgresql_where=text("custom_item_id IS NOT NULL")
+    ),
+)
+
 # TravelItem
 class TravelItem(db.Model):
     __tablename__ = "travel_items"
@@ -114,6 +130,13 @@ class TravelItem(db.Model):
     my_set_item = db.relationship("MySetItem", back_populates="travel_items")
     item = db.relationship("Item")
     custom_item = db.relationship("CustomItem")
+
+__table_args__ = (
+        CheckConstraint(
+            "(item_id IS NOT NULL OR custom_item_id IS NOT NULL OR my_set_item_id IS NOT NULL)",
+            name="check_travelitems_not_all_null"
+        ),
+)
 
 # PackingPlan
 class PackingPlan(db.Model):
