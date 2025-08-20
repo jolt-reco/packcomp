@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import UniqueConstraint, CheckConstraint, text
+from sqlalchemy import CheckConstraint
 
 # User
 class User(db.Model):
@@ -85,6 +85,7 @@ class MySet(db.Model):
     my_set_items = db.relationship("MySetItem", back_populates="my_set", cascade="all, delete-orphan")
 
 # MySetItem
+# item_id / custom_item_id の部分ユニーク制約はマイグレーションで作成
 class MySetItem(db.Model):
     __tablename__ = "my_set_items"
     id = db.Column(db.Integer, primary_key=True)
@@ -98,21 +99,6 @@ class MySetItem(db.Model):
     item = db.relationship("Item", back_populates="my_set_items")
     custom_item = db.relationship("CustomItem", back_populates="my_set_items")
     travel_items = db.relationship("TravelItem", back_populates="my_set_item")
-
-__table_args__ = (
-    UniqueConstraint(
-        "my_set_id", 
-        "item_id", 
-        name="uq_myset_itemid", 
-        postgresql_where=text("item_id IS NOT NULL")
-    ), 
-    UniqueConstraint(
-        "my_set_id", 
-        "custom_item_id", 
-        name="uq_myset_customitemid", 
-        postgresql_where=text("custom_item_id IS NOT NULL")
-    ),
-)
 
 # TravelItem
 class TravelItem(db.Model):
@@ -131,12 +117,12 @@ class TravelItem(db.Model):
     item = db.relationship("Item")
     custom_item = db.relationship("CustomItem")
 
-__table_args__ = (
+    __table_args__ = (
         CheckConstraint(
             "(item_id IS NOT NULL OR custom_item_id IS NOT NULL OR my_set_item_id IS NOT NULL)",
             name="check_travelitems_not_all_null"
         ),
-)
+    )
 
 # PackingPlan
 class PackingPlan(db.Model):
