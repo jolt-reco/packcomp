@@ -54,7 +54,7 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     category = db.Column(db.String, nullable=False)
-    auto_gen = db.Column(db.Boolean, nullable=False)
+    auto_gen = db.Column(db.Boolean, nullable=True)
 
     my_set_items = db.relationship("MySetItem", back_populates="item")
 
