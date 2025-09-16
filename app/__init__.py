@@ -5,8 +5,14 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
-def create_app():
+def create_app(config_name="default"):
     app = Flask(__name__)
+    if config_name == "testing":
+        from config import TestingConfig
+        app.config.from_object(TestingConfig)
+    else:
+        from config import Config
+        app.config.from_object(Config)
 
     # config.pyの設定読み込み
     app.config.from_object("config.Config")
