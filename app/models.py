@@ -57,6 +57,7 @@ class Item(db.Model):
     auto_gen = db.Column(db.Boolean, nullable=True)
 
     my_set_items = db.relationship("MySetItem", back_populates="item")
+    travel_items = db.relationship("TravelItem", back_populates="item")
 
 # CustomItem
 class CustomItem(db.Model):
@@ -73,6 +74,7 @@ class CustomItem(db.Model):
     
     user = db.relationship("User", back_populates="custom_items")
     my_set_items = db.relationship("MySetItem", back_populates="custom_item")
+    travel_items = db.relationship("TravelItem", back_populates="custom_item")
 
 # MySet
 class MySet(db.Model):
@@ -114,8 +116,8 @@ class TravelItem(db.Model):
 
     travel = db.relationship("Travel", back_populates="travel_items")
     my_set_item = db.relationship("MySetItem", back_populates="travel_items")
-    item = db.relationship("Item")
-    custom_item = db.relationship("CustomItem")
+    item = db.relationship("Item", back_populates="travel_items")
+    custom_item = db.relationship("CustomItem", back_populates="travel_items")
 
     __table_args__ = (
         CheckConstraint(
