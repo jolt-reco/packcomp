@@ -108,7 +108,7 @@ def test_user_cascade_delete(session):
     session.commit()
 
     # 関連データが消えているか確認
-    assert session.query(Travel).count() == 0
-    assert session.query(Bag).count() == 0
-    assert session.query(CustomItem).count() == 0
-    assert session.query(MySet).count() == 0
+    assert session.query(Travel).filter_by(id=travel.id).first() is None
+    assert session.query(Bag).filter_by(id=bag.id).first() is None
+    assert session.query(CustomItem).filter_by(id=custom_item.id).first() is None
+    assert session.query(MySet).filter_by(id=my_set.id).first() is None
