@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy.exc import IntegrityError
 from app.models import User, Travel, Bag, CustomItem, MySet
 
 def test_user_relations(session):
@@ -71,3 +72,11 @@ def test_user_relations(session):
 
     # my_set → user
     assert my_set.user.id == user.id
+
+# メールアドレス重複テスト(重複してたらpass)
+def test_user_email_unique(session):
+    user1 = User(user_name="asou", email="asou@test.com", password="pass")
+    user2 = User(user_name="yamaji", email="asou@test.com", password="pass")
+    session.add_all([user1, user2])
+    with pytest.raises(IntegrityError):
+        session.commit()
