@@ -80,3 +80,35 @@ def test_user_email_unique(session):
     session.add_all([user1, user2])
     with pytest.raises(IntegrityError):
         session.commit()
+
+# cascade処理確認
+def test_user_cascade_delete(session):
+    user = User(user_name="hoshi", email="hoshi@test.com", password="pass")
+    session.add(user)
+    session.commit()
+
+    # 関連データを作成
+    travel = Travel(
+        user=user,
+        title="静岡旅行",
+        destination="浜松",
+        departure_date="2025-09-20",
+        return_date="2025-09-25",
+        purpose="観光"
+    )
+    bag = Bag(user=user, name="スーツケース", length_cm=50, width_cm=30, height_cm=70, volume_l=80)
+    custom_item = CustomItem(user=user, name="一眼レフカメラ", category="電子機器")
+    my_set = MySet(user=user, name="カメラセット")
+
+    session.add_all([travel, bag, custom_item, my_set])
+    session.commit()
+
+    # User 削除
+    session.delete(user)
+    session.commit()
+
+    # 関連データが消えているか確認
+    assert session.query(Travel).count() == 0
+    assert session.query(Bag).count() == 0
+    assert session.query(CustomItem).count() == 0
+    assert session.query(MySet).count() == 0
