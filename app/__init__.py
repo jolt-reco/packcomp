@@ -13,9 +13,6 @@ def create_app(config_name="default"):
     else:
         from config import Config
         app.config.from_object(Config)
-
-    # config.pyの設定読み込み
-    app.config.from_object("config.Config")
     
     # DB接続初期化
     db.init_app(app)
