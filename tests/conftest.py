@@ -45,7 +45,7 @@ def user_with_travel(session):
 
 # 簡易テスト用マスターアイテム
 @pytest.fixture
-def minimal_items(session):
+def master_items(session):
     items = [
         # 基本必須
         Item(name="スマホ", category="必需品"),
