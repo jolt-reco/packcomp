@@ -50,8 +50,8 @@ def test_bag_cascade_delete(session):
         user=user,
         title="長野旅行",
         destination="長野",
-        departure_date="2025-09-20",
-        return_date="2025-09-23",
+        departure_date=date(2025, 9, 20),
+        return_date=date(2025, 9, 23),
         purpose="観光"
     )
     session.add(travel)

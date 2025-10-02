@@ -93,8 +93,8 @@ def test_user_cascade_delete(session):
         user=user,
         title="静岡旅行",
         destination="浜松",
-        departure_date="2025-09-20",
-        return_date="2025-09-25",
+        departure_date=date(2025, 9, 20),
+        return_date=date(2025, 9, 23),
         purpose="観光"
     )
     bag = Bag(user=user, name="スーツケース", length_cm=50, width_cm=30, height_cm=70, volume_l=80)

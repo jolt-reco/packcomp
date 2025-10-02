@@ -61,8 +61,8 @@ def test_travel_cascade(session):
         user=user,
         title="神奈川旅行",
         destination="箱根",
-        departure_date="2025-09-20",
-        return_date="2025-09-23",
+        departure_date=date(2025, 9, 20),
+        return_date=date(2025, 9, 23),
         purpose="観光"
     )
     session.add(travel)
