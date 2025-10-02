@@ -30,6 +30,7 @@ def user_with_travel(session):
 
     travel = Travel(
         user=user,
+        title="海外旅行",
         destination="ハワイ",   # 海外
         departure_date=date(2025, 9, 20),
         return_date=date(2025, 9, 23),
