@@ -27,6 +27,7 @@ class Travel(db.Model):
     female_count = db.Column(db.Integer, default=0)
     child_count = db.Column(db.Integer, default=0)
     purpose = db.Column(db.String, nullable=False)
+    transport = db.Column(db.String, nullable=True)
     
     user = db.relationship("User", back_populates="travels")
     travel_items = db.relationship("TravelItem", back_populates="travel", cascade="all, delete-orphan")
