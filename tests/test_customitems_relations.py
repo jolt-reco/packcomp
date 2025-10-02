@@ -1,5 +1,6 @@
 import pytest
 from app.models import User, Travel, MySet, MySetItem, TravelItem, CustomItem
+from datetime import date
 
 def test_customitems_relations(session):
 
@@ -24,8 +25,8 @@ def test_customitems_relations(session):
         user=user,
         title="北海道旅行",
         destination="札幌",
-        departure_date="2025-09-20",
-        return_date="2025-09-23",
+        departure_date=date(2025, 9, 20),
+        return_date=date(2025, 9, 23),
         purpose="観光"
     )
     session.add(travel)

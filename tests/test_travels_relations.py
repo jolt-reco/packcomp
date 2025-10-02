@@ -1,5 +1,6 @@
 import pytest
 from app.models import User, Travel, Item, TravelItem, Bag, PackingPlan
+from datetime import date
 
 def test_travels_relations(session):
 
@@ -8,8 +9,8 @@ def test_travels_relations(session):
     travel = Travel(
         title="東京旅行",
         destination="東京",
-        departure_date="2025-09-20",
-        return_date="2025-09-23",
+        departure_date=date(2025, 9, 20),
+        return_date=date(2025, 9, 23),
         purpose="観光"
     )
     user.travels.append(travel)

@@ -1,6 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 from app.models import User, Travel, Bag, CustomItem, MySet
+from datetime import date
 
 def test_user_relations(session):
 
@@ -13,8 +14,8 @@ def test_user_relations(session):
         user_id=user.id,
         title="沖縄旅行",
         destination="沖縄",
-        departure_date="2025-09-20",
-        return_date="2025-09-23",
+        departure_date=date(2025, 9, 20),
+        return_date=date(2025, 9, 23),
         purpose="観光"
     )
     session.add(travel)
