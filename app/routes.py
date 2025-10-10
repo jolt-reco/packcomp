@@ -27,7 +27,7 @@ def items():
         ]
 
         return render_template(
-            "item_list.html",
+            "items_list.html",
             title=travel_title,
             destination=destination,
             items=mock_items
