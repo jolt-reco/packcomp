@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}旅行入力フォーム{% endblock %}
+
+{% block content %}
+<h2>旅行情報入力</h2>
+<form method="post" action="{{ url_for('packing_list') }}">
+    <label>旅行タイトル: <input type="text" name="title"></label><br>
+    <label>目的地: <input type="text" name="destination"></label><br>
+    <label>出発日: <input type="date" name="departure_date"></label><br>
+    <label>帰着日: <input type="date" name="return_date"></label><br>
+    <label>人数（男性）: <input type="number" name="male_count" min="0"></label><br>
+    <label>人数（女性）: <input type="number" name="female_count" min="0"></label><br>
+    <label>人数（子供）: <input type="number" name="child_count" min="0"></label><br>
+    <button type="submit">持ち物リスト生成</button>
+</form>
+{% endblock %}
