@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>旅行情報入力</h2>
-<form method="post" action="#">
+<form method="post" action="{{ url_for('main.items') }}">
     <label>旅行タイトル: <input type="text" name="title"></label><br>
     <label>目的地: <input type="text" name="destination"></label><br>
     <label>出発日: <input type="date" name="departure_date"></label><br>
