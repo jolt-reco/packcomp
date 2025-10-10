@@ -1,0 +1,22 @@
+<!DOCUTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Pack Comp{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </head>
+    <body>
+        <header>
+            <h1><a href="{{ url_for('index')}}">Pack Comp</a></h1>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+            <p>© 2025 Pack Comp</p>
+        </footer>
+    </body>
+</html>
