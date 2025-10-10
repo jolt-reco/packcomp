@@ -8,8 +8,4 @@ def index():
 
 @bp.route("/form")
 def travel_form():
-    return render_template("form.html")
-
-@bp.route("/list")
-def item_list():
-    return render_template("list.html")
+    return render_template("new_travel.html")
