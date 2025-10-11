@@ -3,11 +3,11 @@ from flask import Blueprint, render_template, request
 bp = Blueprint("main", __name__)
 
 @bp.route("/")
-def index():
-    return render_template("index.html")
+def top():
+    return render_template("top.html")
 
 @bp.route("/form")
-def travel_form():
+def new_travel():
     return render_template("new_travel.html")
 
 @bp.route("/list", methods=["POST"])
