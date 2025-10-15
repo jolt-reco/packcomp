@@ -1,16 +1,15 @@
-from flask import Blueprint, render_template, request
+from flask import render_template, request
+from app.main import main_bp
 
-bp = Blueprint("main", __name__)
-
-@bp.route("/")
+@main_bp.route("/")
 def top():
     return render_template("top.html")
 
-@bp.route("/form")
+@main_bp.route("/form")
 def new_travel():
     return render_template("new_travel.html")
 
-@bp.route("/list", methods=["POST"])
+@main_bp.route("/list", methods=["POST"])
 def items():
     # travel情報の受信(テスト用のみの記述:削除予定)
         travel_title = request.form.get("title")
