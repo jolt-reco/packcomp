@@ -21,8 +21,10 @@ def create_app(config_name="default"):
     migrate.init_app(app, db)
 
     # Blueprint登録
-    from .routes import bp as routes_bp
-    app.register_blueprint(routes_bp)
+    from app.main import main_bp
+    from app.auth import auth_bp
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
 
     from . import models
 
