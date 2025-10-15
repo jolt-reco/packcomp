@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>新規登録</h2>
+<form method="post" action="{{ url_for('auth.register')}}">
+    <label for="email">メールアドレス:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">パスワード:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">新規登録</button>
+</form>
+{% endblock %}
