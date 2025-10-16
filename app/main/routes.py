@@ -5,6 +5,10 @@ from app.main import main_bp
 def top():
     return render_template("top.html")
 
+@main_bp.route("/travels")
+def travels_list():
+     return render_template("travels_list.html")
+
 @main_bp.route("/form")
 def new_travel():
     return render_template("new_travel.html")
