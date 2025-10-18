@@ -3,6 +3,7 @@
 {% block title %}Pack Compへようこそ!{% endblock %}
 
 {% block content %}
+<h1>Pack Compへようこそ!</h1>
 <h2>旅行準備をもっとスマートに</h2>
 <div class="illustration">
     <img src="{{ url_for('static', filename='images/undraw_traveling_c18z-3.svg') }}">
@@ -14,8 +15,8 @@
 </p>
 
 <div class="button-area">
-    <a href="{{ url_for('auth.login')}}" class="login-btn">新規登録/ログインして使う</a>
-    <a href="{{ url_for('main.travels_list') }}" class="guest-btn">ゲストで試す</a>
+    <a href="{{ url_for('auth.login')}}">新規登録/ログインして使う</a>
+    <a href="{{ url_for('main.travels_list') }}">ゲストで試す</a>
 </div>
 
 {% endblock %}
