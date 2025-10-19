@@ -1,0 +1,89 @@
+/* ====== ベース ====== */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header a{
+    color:#38609A;
+    font-size:16px;
+}
+
+h1, h2, h3 {
+    color: #222;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ====== ボタン共通 ====== */
+.btn, .btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    transition: 0.2s ease;
+    font-weight: bold;
+}
+
+.button-area {
+    text-align: center; /* 子のaタグを中央寄せ */
+}
+
+.button-area a, .button-area button{
+    background-color: #65C1EFE8; /* 背景色（青） */
+    display: inline-block;
+    margin: 0 auto 50px;
+    color: white; /* 文字の色 */
+    border: none; /* 枠線を消す */
+    padding: 10px 20px; /* 上下10px・左右20pxの余白 */
+    border-radius: 5px; /* 角を丸くする */
+    font-size: 16px; /* 文字サイズ */
+    cursor: pointer; /* カーソルを「指マーク」にする */
+}
+
+.btn {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.btn:hover {
+    background-color: #ccc;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+/* ====== コンテナ ====== */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+/* ====== トップページ用 ====== */
+.illustration img {
+    display: block;
+    margin: 0 auto 50px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.agreement-text {
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
