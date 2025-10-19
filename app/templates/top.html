@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}Pack Compへようこそ!{% endblock %}
-
 {% block content %}
 <h1>Pack Compへようこそ!</h1>
 <h2>旅行準備をもっとスマートに</h2>
@@ -16,7 +14,9 @@
 
 <div class="button-area">
     <a href="{{ url_for('auth.login')}}">新規登録/ログインして使う</a>
-    <a href="{{ url_for('main.travels_list') }}">ゲストで試す</a>
+    <p>
+        <a href="{{ url_for('main.travels_list') }}">ゲストで試す</a>
+    </p>
 </div>
 
 {% endblock %}
