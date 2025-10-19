@@ -3,23 +3,26 @@
 {% block content %}
 <h2>ログイン</h2>
 <div class="login-container">
-    <form method="post" action="{{ url_for('auth.login')}}">
-        <div class="login-form">
-            <input type="email" placeholder="Email" id="email" name="email" required>
-        </div>
-        
-        <div class="login-form">
-            <input type="password" placeholder="Password" id="password" name="password" required>
-        </div>
+    <div class="tab-buttons">
+        <button id="login-tab" class="active">ログイン</button>
+        <button id="register-tab">新規登録</button>
+    </div>
+
+    <form id="login-form" method="post" action="{{ url_for('auth.login')}}">
+        <input type="email" placeholder="Email" id="login-email" name="email" required>
+        <input type="password" placeholder="Password" id="login-password" name="password" required>
         <div class="button-area">
             <button type="submit">ログイン</button>
         </div>
     </form>
 
-    <p>アカウントをお持ちでない方はこちら</p>
-
-    <div class="button-area">
-        <a href="{{ url_for('auth.register') }}">新規登録</a>
-    </div>
+    <form id="register-form" method="post" action="{{ url_for('auth.register')}}">
+        <input type="text" placeholder="Username" name="username" required>
+        <input type="email" placeholder="Email" id="register-email" name="email" required>
+        <input type="password" placeholder="Password" id="registerpassword" name="password" required>
+        <div class="button-area">
+            <button type="submit">新規登録</button>
+        </div>
+    </form>
 </div>
 {% endblock %}
