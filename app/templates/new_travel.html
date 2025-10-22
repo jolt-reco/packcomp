@@ -3,15 +3,25 @@
 {% block title %}旅行入力フォーム{% endblock %}
 
 {% block content %}
-<h2>旅行情報入力</h2>
-<form method="post" action="{{ url_for('main.items') }}">
-    <label>旅行タイトル: <input type="text" name="title"></label><br>
-    <label>目的地: <input type="text" name="destination"></label><br>
-    <label>出発日: <input type="date" name="departure_date"></label><br>
-    <label>帰着日: <input type="date" name="return_date"></label><br>
-    <label>人数（男性）: <input type="number" name="male_count" min="0"></label><br>
-    <label>人数（女性）: <input type="number" name="female_count" min="0"></label><br>
-    <label>人数（子供）: <input type="number" name="child_count" min="0"></label><br>
+<h2>旅行を登録</h2>
+<div class="newtravel-container">
+    <form method="post" action="{{ url_for('main.items') }}">
+        <label>旅行タイトル <br><input type="text" name="title"></label><br>
+        <label>目的地 <br><input type="text" name="destination"></label><br>
+        <label>出発日 <br><input type="date" name="departure_date"></label><br>
+        <label>帰着日 <br><input type="date" name="return_date"></label><br>
+    </form>
+</div>
+
+<div class="newtravel-block">
+    <form method="post" action="{{ url_for('main.items') }}">
+        <label>男性 <input type="number" name="male_count" min="0"><span>人</span></label><br>
+        <label>女性 <input type="number" name="female_count" min="0"><span>人</span></label><br>
+        <label>子供 <input type="number" name="child_count" min="0"><span>人</span></label><br>
+    </form>
+</div>
+<div class="button-area2">
     <button type="submit">持ち物リスト生成</button>
-</form>
+</div>
+
 {% endblock %}
