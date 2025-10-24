@@ -153,7 +153,7 @@ label{
     text-align: left;
 }
 
-.newtravel-block form{
+.newtravel-block form {
     display: flex;
     gap: 20px;
     background-color: white;
@@ -195,4 +195,31 @@ label{
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;   
+}
+
+.newtravel-block p {
+    font-weight: bold;
+}
+
+.transport-options label {
+  display: inline-block;
+  margin: 5px;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.transport-options input[type="checkbox"] {
+  display: none;
+}
+
+.transport-options input[type="checkbox"]:checked + label,
+.transport-options label:has(input[type="checkbox"]:checked) {
+  background-color: #65c1ef;
+  border-color: #65c1ef;
+  color: white;
+  font-weight: bold;
 }

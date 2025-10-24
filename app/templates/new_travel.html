@@ -20,6 +20,19 @@
         <label>子供 <input type="number" name="child_count" min="0"><span>人</span></label><br>
     </form>
 </div>
+
+<div class="newtravel-block">
+    <form method="post" action="{{ url_for('main.items') }}">
+        <p>交通手段を選択<br></p>
+        <div class="transport-options">
+            <label><input type="checkbox" name="transport" value="car"> 車</label>
+            <label><input type="checkbox" name="transport" value="train"> 電車</label>
+            <label><input type="checkbox" name="transport" value="plane"> 飛行機</label>
+            <label><input type="checkbox" name="transport" value="bus"> バス</label>
+        </div>
+    </form>
+</div>
+
 <div class="button-area2">
     <button type="submit">持ち物リスト生成</button>
 </div>
