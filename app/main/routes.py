@@ -76,3 +76,15 @@ def items():
             destination=destination,
             items=mock_items
         )
+
+@main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
+@login_required
+def select_purpose(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+
+    if request.method == "POST":
+        travel.purpose = request.form["purpose"]
+        db.session.commit()
+        return redirect(url_for("main.items_list", travel_id=travel.id))
+
+    return render_template("select_purpose.html", travel=travel)
