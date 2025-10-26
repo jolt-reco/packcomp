@@ -1,18 +1,28 @@
 from app import db
 from sqlalchemy import CheckConstraint
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # User
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
 
     travels = db.relationship("Travel", back_populates="user", cascade="all, delete-orphan")
     bags = db.relationship("Bag", back_populates="user", cascade="all, delete-orphan")
     custom_items = db.relationship("CustomItem", back_populates="user", cascade="all, delete-orphan")
     my_sets = db.relationship("MySet", back_populates="user", cascade="all, delete-orphan")
+
+    # パスワード設定用メソッド
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    # 照合用メソッド
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
    
 # Travel
 class Travel(db.Model):
