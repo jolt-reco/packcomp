@@ -5,7 +5,7 @@ from app.auth import auth_bp
 from app.models import User
 
 # ログインページ
-@auth_bp.route("/login")
+@auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form["email"]
@@ -22,7 +22,7 @@ def login():
     return render_template("auth/login.html")
 
 # 新規登録ページ
-@auth_bp.route("/register")
+@auth_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
