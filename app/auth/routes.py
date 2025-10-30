@@ -53,3 +53,15 @@ def logout():
     logout_user()
     flash("ログアウトしました。")
     return redirect(url_for("auth.login"))
+
+# ゲストログイン
+@auth_bp.route("/guest_login")
+def guest_login():
+    guest = User.query.filter_by(email="guest@example.com").first()
+    if not guest:
+        guest = User(user_name="ゲスト", email="guest@example.com")
+        guest.set_password("guestpass")
+        db.session.add(guest)
+        db.session.commit()
+    login_user(guest)
+    return redirect(url_for("main.travels_list"))
