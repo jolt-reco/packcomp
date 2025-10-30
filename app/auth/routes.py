@@ -15,7 +15,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             flash("ログインに成功しました！")
-            return redirect(url_for("main.top"))
+            return redirect(url_for("main.travels_list"))
         else:
             flash("メールアドレスまたはパスワードが正しくありません。")
 
@@ -33,7 +33,7 @@ def register():
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             flash("このメールアドレスはすでに登録されています。")
-            return redirect(url_for("auth.register"))
+            return redirect(url_for("auth.login"))
 
         # 新規ユーザー作成
         new_user = User(user_name=username, email=email)
@@ -44,7 +44,7 @@ def register():
         flash("登録が完了しました！ログインしてください。")
         return redirect(url_for("auth.login"))
 
-    return render_template("auth/register.html")
+    return render_template("auth/login.html")
 
 # ログアウトページ
 @auth_bp.route("/logout")
