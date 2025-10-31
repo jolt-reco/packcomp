@@ -26,6 +26,20 @@ label{
     font-weight: bold;
 }
 
+.flash-messages {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+.flash-messages li {
+  background-color: #e9ffe9;
+  border: 1px solid #78c478;
+  color: #2b662b;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
 /* ====== ボタン共通 ====== */
 .button-area1, .button-area2 {
     text-align: center; /* 子のaタグを中央寄せ */
