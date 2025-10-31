@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>旅行を登録</h2>
-<form method="post" action="{{ url_for('main.items') }}">
+<form method="post" action="{{ url_for('main.new_travel') }}">
     <div class="newtravel-container">    
         <label>旅行タイトル <br><input type="text" name="title"></label><br>
         <label>目的地 <br><input type="text" name="destination"></label><br>
