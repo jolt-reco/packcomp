@@ -4,25 +4,21 @@
 
 {% block content %}
 <h2>旅行を登録</h2>
-<div class="newtravel-container">
-    <form method="post" action="{{ url_for('main.items') }}">
+<form method="post" action="{{ url_for('main.items') }}">
+    <div class="newtravel-container">    
         <label>旅行タイトル <br><input type="text" name="title"></label><br>
         <label>目的地 <br><input type="text" name="destination"></label><br>
         <label>出発日 <br><input type="date" name="departure_date"></label><br>
         <label>帰着日 <br><input type="date" name="return_date"></label><br>
-    </form>
-</div>
+    </div>
 
-<div class="newtravel-block">
-    <form method="post" action="{{ url_for('main.items') }}">
+    <div class="newtravel-block">
         <label>男性 <input type="number" name="male_count" min="0"><span>人</span></label><br>
         <label>女性 <input type="number" name="female_count" min="0"><span>人</span></label><br>
         <label>子供 <input type="number" name="child_count" min="0"><span>人</span></label><br>
-    </form>
-</div>
+    </div>
 
-<div class="newtravel-block">
-    <form method="post" action="{{ url_for('main.items') }}">
+    <div class="newtravel-block">
         <p>交通手段を選択<br></p>
         <div class="transport-options">
             <label><input type="checkbox" name="transport" value="car"> 車</label>
@@ -30,11 +26,11 @@
             <label><input type="checkbox" name="transport" value="plane"> 飛行機</label>
             <label><input type="checkbox" name="transport" value="bus"> バス</label>
         </div>
-    </form>
-</div>
+    </div>
 
-<div class="button-area2">
-    <button type="submit">持ち物リスト生成</button>
-</div>
+    <div class="button-area2">
+        <button type="submit">持ち物リスト生成</button>
+    </div>
+</form>
 
 {% endblock %}
