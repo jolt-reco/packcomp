@@ -14,7 +14,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
             login_user(user)
-            flash("ログインに成功しました！")
+            flash(f"ログインしました。ようこそ{user.user_name}さん！")
             return redirect(url_for("main.travels_list"))
         else:
             flash("メールアドレスまたはパスワードが正しくありません。")
@@ -64,4 +64,5 @@ def guest_login():
         db.session.add(guest)
         db.session.commit()
     login_user(guest)
+    flash("ログインしました。ようこそゲストさん！")
     return redirect(url_for("main.travels_list"))
