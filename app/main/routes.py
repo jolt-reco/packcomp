@@ -15,7 +15,7 @@ def travels_list():
     travels = Travel.query.filter_by(user_id=current_user.id).all()
     return render_template("travels_list.html", travels=travels)
 
-@main_bp.route("/form")
+@main_bp.route("/form", methods=["POST"])
 @login_required
 def new_travel():
     if request.method == "POST":
@@ -46,7 +46,7 @@ def new_travel():
             db.session.add(new_travel)
             db.session.commit()
             flash("旅行を登録しました！", "success")
-            return redirect(url_for("main.travel_list"))
+            return redirect(url_for("main.items"))
         
         except Exception as e:
             db.session.rollback()
