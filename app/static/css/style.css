@@ -152,7 +152,7 @@ label{
   cursor: pointer;
 }
 
-.travel_card h3, .travel_card p {
+.travel_card h3, .travel_card p, .travel_card a {
     color: white;
 }
 
