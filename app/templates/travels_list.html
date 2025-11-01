@@ -11,7 +11,7 @@
             style="background-image: url(\'{{ url_for('static', filename='images/sample.jpg') }}\');">
         </div>
         <p>{{ travel.departure_date }} 〜 {{ travel.return_date }}</p>
-        <a href="{{ url_for('main.items') }}" class="btn"></a>
+        <a href="{{ url_for('main.items') }}" class="btn">持ち物リストを見る</a>
     </div>
     {% endfor %}
 </div>
