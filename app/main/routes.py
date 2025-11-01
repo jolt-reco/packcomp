@@ -15,7 +15,7 @@ def travels_list():
     travels = Travel.query.filter_by(user_id=current_user.id).all()
     return render_template("travels_list.html", travels=travels)
 
-@main_bp.route("/form", methods=["POST"])
+@main_bp.route("/form", methods=["GET", "POST"])
 @login_required
 def new_travel():
     if request.method == "POST":
@@ -24,9 +24,9 @@ def new_travel():
             destination = request.form["destination"]
             departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
             return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
-            male_count = int(request.form.get("male_count", 0))
-            female_count = int(request.form.get("female_count", 0))
-            child_count = int(request.form.get("child_count", 0))
+            male_count = int(request.form.get("male_count") or 0)
+            female_count = int(request.form.get("female_count") or 0)
+            child_count = int(request.form.get("child_count") or 0)
             purpose = ""
             transport = request.form.get("transport", "")
 
@@ -54,7 +54,7 @@ def new_travel():
 
     return render_template("new_travel.html")
 
-@main_bp.route("/list", methods=["POST"])
+@main_bp.route("/list", methods=["GET", "POST"])
 def items():
     # travel情報の受信(テスト用のみの記述:削除予定)
         travel_title = request.form.get("title")
