@@ -4,20 +4,16 @@
 
 {% block content %}
 <div class="travel_container">
+    {% for travel in travels %}
     <div class="travel_card">
-        <h3>北海道旅行</h3>
+        <h3>{{ travel.title }}</h3>
         <div class="travel_image"
             style="background-image: url(\'{{ url_for('static', filename='images/sample.jpg') }}\');">
         </div>
-        <p>2025年10月16日〜2025年10月20日</p>
+        <p>{{ travel.departure_date }} 〜 {{ travel.return_date }}</p>
         <a href="{{ url_for('main.items') }}" class="btn"></a>
     </div>
-
-    <div class="travel_card">
-        <h3>沖縄旅行</h3>
-        <p>2025年11月16日〜2025年11月20日</p>
-        <a href="{{ url_for('main.items') }}" class="btn"></a>
-    </div>    
+    {% endfor %}
 </div>
 
 <div class="button-area2">
