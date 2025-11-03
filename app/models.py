@@ -67,7 +67,7 @@ class Item(db.Model):
     category = db.Column(db.String, nullable=False)
     for_gender = db.Column(db.String, nullable=False, default="all")
     for_season = db.Column(db.String, nullable=False, default="all")
-    for_weather = db.Column(db.String, default="any")
+    for_weather = db.Column(db.String, default="all")
     for_transport = db.Column(db.String, nullable=False, default="all")
     min_days = db.Column(db.Integer, nullable=True)
     max_days = db.Column(db.Integer, nullable=True)
