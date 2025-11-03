@@ -15,6 +15,24 @@ def travels_list():
     travels = Travel.query.filter_by(user_id=current_user.id).all()
     return render_template("travels_list.html", travels=travels)
 
+@main_bp.route("/delete_travel/<int:travel_id>", methods=["GET", "POST"])
+@login_required
+def delete_travel(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+
+    if travel.user_id != current_user.id:
+        flash("他のユーザーの旅行は削除できません", "danger")
+        return redirect(url_for("main.travels_list"))
+    
+    try:
+        db.session.delete(travel)
+        db.session.commit()
+        flash("旅行を削除しました", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"削除に失敗しました{e}", "danger")
+    return redirect(url_for("main.travels_list"))
+
 @main_bp.route("/form", methods=["GET", "POST"])
 @login_required
 def new_travel():
