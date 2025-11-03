@@ -65,7 +65,12 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     category = db.Column(db.String, nullable=False)
-    auto_gen = db.Column(db.Boolean, nullable=True)
+    for_gender = db.Column(db.String, nullable=False, default="all")
+    for_season = db.Column(db.String, nullable=False, default="all")
+    for_weather = db.Column(db.String, default="any")
+    for_transport = db.Column(db.String, nullable=False, default="all")
+    min_days = db.Column(db.Integer, nullable=True)
+    max_days = db.Column(db.Integer, nullable=True)
 
     my_set_items = db.relationship("MySetItem", back_populates="item")
     travel_items = db.relationship("TravelItem", back_populates="item")
