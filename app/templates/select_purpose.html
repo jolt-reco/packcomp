@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2>旅行の目的を選択してください</h2>
-<form method="POST" action="{{ url_for('main.set_purpose', travel_id=travel.id) }}">
+<form method="POST" action="{{ url_for('main.select_purpose', travel_id=travel.id) }}">
 
     <!-- 定番カテゴリ -->
     <h3>定番</h3>
