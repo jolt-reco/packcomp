@@ -65,7 +65,7 @@ def new_travel():
             db.session.add(new_travel)
             db.session.commit()
             flash("旅行を登録しました！", "success")
-            return redirect(url_for("main.items", travel_id=new_travel.id))
+            return redirect(url_for("main.select_purpose", travel_id=new_travel.id))
         
         except Exception as e:
             db.session.rollback()
