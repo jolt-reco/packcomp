@@ -3,7 +3,7 @@
 {% block title %}持ち物リスト{% endblock %}
 
 {% block content %}
-<h2>{{ title }}（{{ destination }}）の持ち物リスト</h2>
+<h2>{{ travel.title }}（{{ travel.destination }}）の持ち物リスト</h2>
 <ul>
     {% for item in items %}
         <li>{{ item.name }} * {{ item.quantity }}</li>
