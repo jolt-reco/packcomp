@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}旅行目的の選択{% endblock %}
+
+{% block content %}
+<h2>旅行の目的を選択してください</h2>
+<form method="POST" action="{{ url_for('main.set_purpose', travel_id=travel.id) }}">
+
+    <!-- 定番カテゴリ -->
+    <h3>定番</h3>
+    <label><input type="radio" name="purpose" value="sightseeing"> 観光</label><br>
+    <label><input type="radio" name="purpose" value="business"> ビジネス</label><br>
+    <label><input type="radio" name="purpose" value="homecoming"> 帰省</label><br>
+    <label><input type="radio" name="purpose" value="event"> イベント・コンサート参加</label><br>
+    <label><input type="radio" name="purpose" value="study"> 留学・短期研修</label><br>
+    <label><input type="radio" name="purpose" value="shopping"> 買い物・ショッピング</label><br>
+
+    <!-- 自然・リラックス系 -->
+    <h3>自然・癒し</h3>
+    <label><input type="radio" name="purpose" value="hot_spring"> 温泉</label><br>
+    <label><input type="radio" name="purpose" value="mountain"> 登山・ハイキング</label><br>
+    <label><input type="radio" name="purpose" value="beach"> 海水浴・リゾート</label><br>
+    <label><input type="radio" name="purpose" value="camp"> キャンプ・グランピング</label><br>
+    <label><input type="radio" name="purpose" value="nature"> 自然体験・星空観察</label><br>
+    <label><input type="radio" name="purpose" value="healing"> リトリート・心身リフレッシュ</label><br>
+
+    <!-- アクティブ系 -->
+    <h3>アクティブ</h3>
+    <label><input type="radio" name="purpose" value="ski"> スキー・スノーボード</label><br>
+    <label><input type="radio" name="purpose" value="surf"> サーフィン</label><br>
+    <label><input type="radio" name="purpose" value="diving"> ダイビング・シュノーケリング</label><br>
+    <label><input type="radio" name="purpose" value="cycling"> サイクリング</label><br>
+    <label><input type="radio" name="purpose" value="fishing"> 釣り</label><br>
+    <label><input type="radio" name="purpose" value="golf"> ゴルフ</label><br>
+    <label><input type="radio" name="purpose" value="running"> マラソン・ジョギング</label><br>
+    <label><input type="radio" name="purpose" value="climbing"> ロッククライミング</label><br>
+    <label><input type="radio" name="purpose" value="driving"> ドライブ・ツーリング</label><br>
+    <label><input type="radio" name="purpose" value="adventure"> 冒険・トレッキング</label><br>
+
+    <!-- 食・文化系 -->
+    <h3>文化・グルメ</h3>
+    <label><input type="radio" name="purpose" value="food"> 食べ歩き・グルメ旅行</label><br>
+    <label><input type="radio" name="purpose" value="history"> 歴史・文化探訪</label><br>
+    <label><input type="radio" name="purpose" value="temple"> 寺社巡り・御朱印集め</label><br>
+    <label><input type="radio" name="purpose" value="festival"> 祭り・地域イベント参加</label><br>
+    <label><input type="radio" name="purpose" value="art"> 美術館・アート巡り</label><br>
+    <label><input type="radio" name="purpose" value="movie"> 聖地巡礼（映画・アニメロケ地）</label><br>
+    <label><input type="radio" name="purpose" value="sake"> 酒蔵・ワイナリー巡り</label><br>
+
+    <!-- 家族・人間関係 -->
+    <h3>家族・友人・恋人</h3>
+    <label><input type="radio" name="purpose" value="honeymoon"> 新婚旅行</label><br>
+    <label><input type="radio" name="purpose" value="couple"> カップル旅行</label><br>
+    <label><input type="radio" name="purpose" value="family"> 家族旅行</label><br>
+    <label><input type="radio" name="purpose" value="friends"> 友人旅行・グループ旅行</label><br>
+    <label><input type="radio" name="purpose" value="kids"> 子連れ旅行</label><br>
+    <label><input type="radio" name="purpose" value="pet"> ペット同伴旅行</label><br>
+
+    <!-- 特殊・ユニーク系 -->
+    <h3>その他・ユニーク</h3>
+    <label><input type="radio" name="purpose" value="remote_work"> ワーケーション（リモートワーク）</label><br>
+    <label><input type="radio" name="purpose" value="volunteer"> ボランティア</label><br>
+    <label><input type="radio" name="purpose" value="photography"> 写真撮影・映像制作</label><br>
+    <label><input type="radio" name="purpose" value="pilgrimage"> 巡礼・スピリチュアル旅</label><br>
+    <label><input type="radio" name="purpose" value="healing_trip"> 心身の癒し・療養</label><br>
+    <label><input type="radio" name="purpose" value="sports_event"> スポーツ観戦</label><br>
+    <label><input type="radio" name="purpose" value="music_festival"> 音楽フェス参加</label><br>
+    <label><input type="radio" name="purpose" value="theme_park"> テーマパーク・遊園地</label><br>
+    <label><input type="radio" name="purpose" value="training"> 合宿・トレーニング</label><br>
+    <label><input type="radio" name="purpose" value="moving"> 引っ越し・転居準備</label><br>
+    <label><input type="radio" name="purpose" value="spiritual"> 占い・パワースポット巡り</label><br>
+    <label><input type="radio" name="purpose" value="nothing"> 特に目的なし・気ままな旅</label><br>
+
+    <button type="submit">次へ</button>
+</form>
+{% endblock %}
