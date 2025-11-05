@@ -6,7 +6,7 @@
 <h2>{{ travel.title }}（{{ travel.destination }}）の持ち物リスト</h2>
 <ul>
     {% for item in items %}
-        <li>{{ item.name }} * {{ item.quantity }}</li>
+        <li>{{ item.name }} {{ item.category }} 個数: {{ item.quantity }}</li>
     {% endfor %}
 </ul>
 <a href="{{ url_for('main.new_travel') }}">戻る</a>
