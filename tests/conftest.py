@@ -22,9 +22,9 @@ def session(app):
 def user_with_travel(session):
     user = User(
         user_name="test",
-        email="test@example.com",
-        password="pass"
+        email="test@example.com"
     )
+    user.set_password("pass")
     session.add(user)
     session.commit()
 
@@ -34,7 +34,6 @@ def user_with_travel(session):
         destination="ハワイ",   # 海外
         departure_date=date(2025, 9, 20),
         return_date=date(2025, 9, 23),
-        purpose="海",          # 海水浴目的
         transport="飛行機",     # 飛行機移動
         female_count=1,        # 女性1人
         child_count=1            # 子供連れ

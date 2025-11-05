@@ -4,7 +4,8 @@ from app.models import User, Bag, Travel, PackingPlan
 
 def test_packing_plans_relations(session):
     # データ作成
-    user = User(user_name="hachiaro", email="hachiro@test.com", password="pass")
+    user = User(user_name="hachiaro", email="hachiro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     bag = Bag(
@@ -22,8 +23,7 @@ def test_packing_plans_relations(session):
         title="海外旅行",
         destination="韓国",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     session.add(travel)
 

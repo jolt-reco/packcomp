@@ -6,7 +6,8 @@ from datetime import date
 def test_user_relations(session):
 
     # データ作成
-    user = User(user_name="Taro", email="taro@test.com", password="pass")
+    user = User(user_name="Taro", email="taro@test.com")
+    user.set_password("pass")
     session.add(user)
     session.commit()
 
@@ -15,8 +16,7 @@ def test_user_relations(session):
         title="沖縄旅行",
         destination="沖縄",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     session.add(travel)
 
@@ -76,15 +76,18 @@ def test_user_relations(session):
 
 # メールアドレス重複テスト(重複してたらpass)
 def test_user_email_unique(session):
-    user1 = User(user_name="asou", email="asou@test.com", password="pass")
-    user2 = User(user_name="yamaji", email="asou@test.com", password="pass")
+    user1 = User(user_name="asou", email="asou@test.com")
+    user1.set_password("pass")
+    user2 = User(user_name="yamaji", email="asou@test.com")
+    user2.set_password("pass")
     session.add_all([user1, user2])
     with pytest.raises(IntegrityError):
         session.commit()
 
 # cascade処理確認
 def test_user_cascade_delete(session):
-    user = User(user_name="hoshi", email="hoshi@test.com", password="pass")
+    user = User(user_name="hoshi", email="hoshi@test.com")
+    user.set_password("pass")
     session.add(user)
     session.commit()
 
@@ -94,8 +97,7 @@ def test_user_cascade_delete(session):
         title="静岡旅行",
         destination="浜松",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     bag = Bag(user=user, name="スーツケース", length_cm=50, width_cm=30, height_cm=70, volume_l=80)
     custom_item = CustomItem(user=user, name="一眼レフカメラ", category="電子機器")

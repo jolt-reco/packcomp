@@ -4,7 +4,8 @@ from app.models import User, MySet, Item, MySetItem
 def test_my_sets_relations(session):
 
     # データ作成
-    user = User(user_name="goro", email="goro@test.com", password="pass")
+    user = User(user_name="goro", email="goro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     my_set = MySet(user=user, name="ゲームセット")
@@ -24,7 +25,8 @@ def test_my_sets_relations(session):
 # cascade処理確認
 def test_myset_cascade_delete(session):
     # データ作成
-    user = User(user_name="kobori", email="kobori@test.com", password="pass")
+    user = User(user_name="kobori", email="kobori@test.com")
+    user.set_password("pass")
     session.add(user)
     session.commit()
 

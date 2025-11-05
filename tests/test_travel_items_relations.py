@@ -5,7 +5,8 @@ from datetime import date
 
 def test_travel_items_relations(session):
     # データ作成
-    user = User(user_name="shichiro", email="shichiro@test.com", password="pass")
+    user = User(user_name="shichiro", email="shichiro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     travel = Travel(
@@ -13,8 +14,7 @@ def test_travel_items_relations(session):
         title="石川旅行",
         destination="金沢",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     session.add(travel)
 
@@ -51,7 +51,8 @@ def test_travel_items_relations(session):
 @pytest.mark.skip(reason="PostgreSQL専用のチェック制約なのでSQLiteでは確認できない")
 def test_travel_item_check_constraint(session):
     # データ作成
-    user = User(user_name="yuji", email="yuji@test.com", password="pass")
+    user = User(user_name="yuji", email="yuji@test.com")
+    user.set_password("pass")
     session.add(user)
 
     travel = Travel(
@@ -59,8 +60,7 @@ def test_travel_item_check_constraint(session):
         title="福岡旅行",
         destination="福岡",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     session.add(travel)
 
@@ -132,16 +132,6 @@ def auto_generated_travel_items(session, user_with_travel, master_items):
                     quantity=travel.child_count
                 )
                 session.add(travel_item)
-    
-     # 目的別アイテム抽出
-    for pickup_item in usable_items:
-        if travel.purpose == "海" and pickup_item.category == "目的:海":
-            travel_item = TravelItem(
-                travel=travel,
-                item=pickup_item,
-                quantity=1
-            )
-            session.add(travel_item)
 
     session.commit()
 
@@ -173,10 +163,6 @@ def test_auto_generated_travel_item(session, user_with_travel, master_items):
     for name in ["オムツ", "ベビーカー"]:
         child_item = next(ti for ti in travel_items if ti.item.name == name)
         assert child_item.quantity == travel.child_count
-
-    # 目的別アイテム確認（水着は数量1)
-    purpose_item = next(ti for ti in travel_items if ti.item.name == "水着")
-    assert purpose_item.quantity == 1
 
     # 飛行機NGアイテムは入っていない
     ng_item = [ti.item.name for ti in travel_items]

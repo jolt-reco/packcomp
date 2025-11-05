@@ -5,7 +5,8 @@ from datetime import date
 def test_items_relations(session):
 
     # データ作成
-    user = User(user_name="Saburo", email="saburo@test.com", password="pass")
+    user = User(user_name="Saburo", email="saburo@test.com")
+    user.set_password("pass")
     session.add(user)
 
     travel = Travel(
@@ -13,8 +14,7 @@ def test_items_relations(session):
         title="大阪旅行",
         destination="大阪",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
 
     item = Item(name="胃薬", category="薬")

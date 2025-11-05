@@ -5,13 +5,13 @@ from datetime import date
 def test_travels_relations(session):
 
     # データ作成
-    user = User(user_name="ichiro", email="ichiro@test.com", password="pass")
+    user = User(user_name="ichiro", email="ichiro@test.com")
+    user.set_password("pass")
     travel = Travel(
         title="東京旅行",
         destination="東京",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     user.travels.append(travel)
     session.add(user)    
@@ -54,7 +54,8 @@ def test_travels_relations(session):
 # cascade処理確認
 def test_travel_cascade(session):
     # データ作成
-    user = User(user_name="sakama", email="sakama@test.com", password="pass")
+    user = User(user_name="sakama", email="sakama@test.com")
+    user.set_password("pass")
     session.add(user)
 
     travel = Travel(
@@ -62,8 +63,7 @@ def test_travel_cascade(session):
         title="神奈川旅行",
         destination="箱根",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     session.add(travel)
 

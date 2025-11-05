@@ -4,7 +4,8 @@ from app.models import User, MySet, Item, MySetItem, CustomItem
 
 def test_my_set_items_relations(session):
     # データ作成
-    user = User(user_name="rokuro", email="rokuro@test.com", password="pass")
+    user = User(user_name="rokuro", email="rokuro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     my_set = MySet(user=user, name="防災セット")
@@ -21,7 +22,8 @@ def test_my_set_items_relations(session):
 # 部分的ユニーク制約確認
 def test_my_set_item_unique_constraint(session):
     # データ作成
-    user = User(user_name="kuro", email="kuro@test.com", password="pass")
+    user = User(user_name="kuro", email="kuro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     my_set = MySet(user=user, name="旅行セット")

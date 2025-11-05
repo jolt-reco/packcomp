@@ -5,7 +5,8 @@ from datetime import date
 def test_customitems_relations(session):
 
     # データ作成
-    user = User(user_name="Shiro", email="shiro@test.com", password="pass")
+    user = User(user_name="Shiro", email="shiro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     custom_item = CustomItem(
@@ -26,8 +27,7 @@ def test_customitems_relations(session):
         title="北海道旅行",
         destination="札幌",
         departure_date=date(2025, 9, 20),
-        return_date=date(2025, 9, 23),
-        purpose="観光"
+        return_date=date(2025, 9, 23)
     )
     session.add(travel)
 

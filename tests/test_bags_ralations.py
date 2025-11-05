@@ -5,7 +5,8 @@ from datetime import date
 def test_bags_relations(session):
 
     # データ作成
-    user = User(user_name="Jiro", email="jiro@test.com", password="pass")
+    user = User(user_name="Jiro", email="jiro@test.com")
+    user.set_password("pass")
     session.add(user)
 
     bag = Bag(
@@ -24,7 +25,6 @@ def test_bags_relations(session):
         destination="京都",
         departure_date=date(2025, 9, 20),
         return_date=date(2025, 9, 23),
-        purpose="観光"
     )
     session.add(travel)
 
@@ -43,7 +43,8 @@ def test_bags_relations(session):
 # cascade処理確認
 def test_bag_cascade_delete(session):
     # データ作成
-    user = User(user_name="yamagishi", email="yamagishi@test.com", password="pass")
+    user = User(user_name="yamagishi", email="yamagishi@test.com")
+    user.set_password("pass")
     session.add(user)
 
     travel = Travel(
@@ -52,7 +53,6 @@ def test_bag_cascade_delete(session):
         destination="長野",
         departure_date=date(2025, 9, 20),
         return_date=date(2025, 9, 23),
-        purpose="観光"
     )
     session.add(travel)
 
