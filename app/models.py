@@ -36,12 +36,28 @@ class Travel(db.Model):
     male_count = db.Column(db.Integer, default=1)
     female_count = db.Column(db.Integer, default=0)
     child_count = db.Column(db.Integer, default=0)
-    purpose = db.Column(db.String, nullable=False)
     transport = db.Column(db.String, nullable=True)
     
     user = db.relationship("User", back_populates="travels")
     travel_items = db.relationship("TravelItem", back_populates="travel", cascade="all, delete-orphan")
+    travel_purposes = db.relationship("TravelPurpose", back_populates="travel", cascade="all, delete-orphan")
     packing_plans = db.relationship("PackingPlan", back_populates="travel", cascade="all, delete-orphan")
+
+class Purpose(db.Model):
+    __tablename__ = "purposes"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
+
+    travel_purposes = db.relationship("TravelPurpose", back_populates="purpose")
+
+# TravelPupose
+class TravelPurpose(db.Model):
+    __tablename__ = "travel_purposes"
+    travel_id = db.Column(db.Integer, db.ForeignKey("travels.id"), primary_key=True)
+    purpose_id = db.Column(db.Integer, db.ForeignKey("purposes.id"), primary_key=True)
+
+    travel = db.relationship("Travel", back_populates="travel_purposes")
+    purpose = db.relationship("Purpose", back_populates="travel_purposes")
 
 # Bag
 class Bag(db.Model):
