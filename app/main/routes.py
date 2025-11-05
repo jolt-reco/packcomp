@@ -77,9 +77,7 @@ def new_travel():
 def items(travel_id):
     travel = Travel.query.get_or_404(travel_id)
 
-    gender = travel.gender
-
-    month = travel.depature_date.month
+    month = travel.departure_date.month
     if month in [12, 1, 2, 3]:
         season = "winter"
     elif month in [4, 5, 6]:
@@ -90,12 +88,11 @@ def items(travel_id):
         season = "autumn"
 
     transport = travel.transport
-    weather = travel.weather
-    days = travel.days
+    weather = "all"
+    days = (travel.return_date - travel.departure_date).days + 1
 
     items = Item.query.filter(
         and_(
-            Item.for_gender.in_([gender, "all"]),
             Item.for_season.in_([season, "all"]),
             Item.for_transport.in_([transport, "all"]),
             Item.for_weather.in_([weather, "all"]),
@@ -104,11 +101,27 @@ def items(travel_id):
         )
     ).all()
 
+    item_list = []
+    for item in items:
+        if item.for_gender == "male":
+            quantity = travel.male_count
+        elif item.for_gender == "female":
+            quantity = travel.female_count
+        elif item.for_gender == "child":
+            quantity = travel.child_count
+        else:
+            quantity = travel.male_count + travel.female_count + travel.child_count
+
+        item_list.append({
+                "name": item.name,
+                "category": item.category,
+                "quantity": quantity
+            })
 
     return render_template(
         "items_list.html",
         travel=travel,
-        items=items
+        items=item_list
     )
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
