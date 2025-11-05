@@ -1,9 +1,10 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Travel
+from app.models import Travel, Item
 from datetime import datetime
 from app.main import main_bp
+from sqlalchemy import and_, or_
 
 @main_bp.route("/")
 def top():
@@ -76,16 +77,38 @@ def new_travel():
 def items(travel_id):
     travel = Travel.query.get_or_404(travel_id)
 
-    # 仮アイテムの受信(削除予定)
-    mock_items = [
-        {"name": "歯ブラシ", "quantity": 1},
-        {"name": "パスポート", "quantity": 1},
-    ]
+    gender = travel.gender
+
+    month = travel.depature_date.month
+    if month in [12, 1, 2, 3]:
+        season = "winter"
+    elif month in [4, 5, 6]:
+        season = "spring"
+    elif month in [7, 8, 9]:
+        season = "summer"
+    else:
+        season = "autumn"
+
+    transport = travel.transport
+    weather = travel.weather
+    days = travel.days
+
+    items = Item.query.filter(
+        and_(
+            Item.for_gender.in_([gender, "all"]),
+            Item.for_season.in_([season, "all"]),
+            Item.for_transport.in_([transport, "all"]),
+            Item.for_weather.in_([weather, "all"]),
+            or_(Item.min_days.is_(None), Item.min_days <= days),
+            or_(Item.max_days.is_(None), Item.max_days >= days)
+        )
+    ).all()
+
 
     return render_template(
         "items_list.html",
         travel=travel,
-        items=mock_items
+        items=items
     )
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
