@@ -47,6 +47,7 @@ class Purpose(db.Model):
     __tablename__ = "purposes"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
+    caegory = db.Column(db.String, nullable=False) 
 
     travel_purposes = db.relationship("TravelPurpose", back_populates="purpose")
 
