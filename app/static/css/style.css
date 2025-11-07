@@ -235,3 +235,57 @@ label{
   color: white;
   font-weight: bold;
 }
+
+/* ====== 目的選択画面用 ====== */
+.purpose-section h3 {
+  margin-top: 24px;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 4px;
+}
+
+.purpose-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 12px 0 24px 0;
+}
+
+.purpose-card {
+  padding: 14px;
+  text-align: center;
+  background-color: #fafafa;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.95rem;
+}
+
+.purpose-card:hover {
+  background-color: #f0f0f0;
+}
+
+.purpose-card.selected {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
+  box-shadow: 0 0 10px rgba(76,175,80,0.4);
+  transform: scale(1.03);
+}
+
+.submit-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #43a047;
+}
