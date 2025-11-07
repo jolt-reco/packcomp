@@ -1,10 +1,11 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Travel, Item
+from app.models import Travel, Item, Purpose, TravelPurpose
 from datetime import datetime
 from app.main import main_bp
 from sqlalchemy import and_, or_
+from itertools import groupby
 
 @main_bp.route("/")
 def top():
@@ -130,8 +131,21 @@ def select_purpose(travel_id):
     travel = Travel.query.get_or_404(travel_id)
 
     if request.method == "POST":
-        travel.purpose = request.form["purpose"]
-        db.session.commit()
-        return redirect(url_for("main.items_list", travel_id=travel.id))
+        selected = request.form.get("purposes", "")
+        purpose_ids = [int(x) for x in selected.split(',') if x]
+        
+        TravelPurpose.query.filter(travel_id=travel_id).delete()
 
-    return render_template("select_purpose.html", travel=travel)
+        purposes = Purpose.query.filter(Purpose.id.in_(purpose_ids)).all()
+        for pid in purpose_ids:
+            tp = TravelPurpose(travel_id=travel_id, purpose_id=pid)
+            db.session.add(tp)
+        db.session.commit()
+        return redirect(url_for("main.items", travel_id=travel_id))
+
+    purposes = Purpose.query.order_by(Purpose.category).all()
+    grouped_purposes = { 
+        category: list(purposes_in_cat) 
+        for category, purposes_in_cat in groupby(purposes, key=lambda x: x.category)
+        }
+    return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
