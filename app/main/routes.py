@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Travel, Item, Purpose, TravelPurpose
+from app.models import Travel, Item, Purpose, TravelPurpose, PurposeItem
 from datetime import datetime
 from app.main import main_bp
 from sqlalchemy import and_, or_
@@ -92,7 +92,16 @@ def items(travel_id):
     weather = "all"
     days = (travel.return_date - travel.departure_date).days + 1
 
+    purpose_ids = [
+        tp.purpose_id for tp in TravelPurpose.query.filter_by(travel_id=travel_id).all()
+        ]
+
+    item_ids = [
+        pi.item_id for pi in PurposeItem.query.filter(PurposeItem.purpose_id.in_(purpose_ids)).all()
+        ]
+
     items = Item.query.filter(
+        Item.id.in_(item_ids),
         and_(
             Item.for_season.in_([season, "all"]),
             Item.for_transport.in_([transport, "all"]),
@@ -136,7 +145,6 @@ def select_purpose(travel_id):
         
         TravelPurpose.query.filter(travel_id=travel_id).delete()
 
-        purposes = Purpose.query.filter(Purpose.id.in_(purpose_ids)).all()
         for pid in purpose_ids:
             tp = TravelPurpose(travel_id=travel_id, purpose_id=pid)
             db.session.add(tp)
