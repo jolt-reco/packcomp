@@ -49,7 +49,8 @@ class Purpose(db.Model):
     name = db.Column(db.String, nullable=False, unique=True)
     category = db.Column(db.String, nullable=False) 
 
-    travel_purposes = db.relationship("TravelPurpose", back_populates="purpose")
+    travel_purposes = db.relationship("TravelPurpose", back_populates="purpose",cascade="all, delete-orphan")
+    purpose_items = db.relationship("PurposeItem", back_populates="purpose",cascade="all, delete-orphan")
 
 # TravelPupose
 class TravelPurpose(db.Model):
@@ -91,6 +92,16 @@ class Item(db.Model):
 
     my_set_items = db.relationship("MySetItem", back_populates="item")
     travel_items = db.relationship("TravelItem", back_populates="item")
+    purpose_items = db.relationship("PurposeItem", back_populates="item",cascade="all, delete-orphan")
+
+# PurposeItem
+class PurposeItem(db.Model):
+    __tablename__ = "purpose_items"
+    purpose_id = db.Column(db.Integer, db.ForeignKey("purposes.id"), primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey("items.id"), primary_key=True)
+    
+    purpose = db.relationship("Purpose", back_populates="purpose_items")
+    item = db.relationship("Item", back_populates="purpose_items")
 
 # CustomItem
 class CustomItem(db.Model):
