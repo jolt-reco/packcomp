@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import Purpose
+from app.models import Purpose, Item
 
 def seed_purpose():
     data = [
@@ -41,8 +41,34 @@ def seed_purpose():
            db.session.add(Purpose(name=p["name"], category=p["category"]))
     db.session.commit()
 
+def seed_item():
+    data = [
+        {"name": "アウター", "category": "衣類", "for_season": "winter"},
+        {"name": "歯ブラシ", "category": "生活用品"},
+        {"name": "充電ケーブル", "category": "電子機器"},
+        {"name": "タオル", "category": "生活用品"},
+        {"name": "登山靴", "category": "アウトドア"},
+    ]
+
+    for i in data:
+        if not Item.query.filter_by(name=i["name"]).first():
+           db.session.add(
+               Item(
+                   name=i["name"],
+                   category=i["category"],
+                    for_gender=i.get("for_gender", "all"),
+                    for_season=i.get("for_season", "all"),
+                    for_weather=i.get("for_weather", "all"),
+                    for_transport=i.get("for_transport", "all"),
+                    min_days=i.get("min_days"),
+                    max_days=i.get("max_days")
+               )
+           )
+    db.session.commit()
+
+
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
         seed_purpose()
-
+        seed_item()
