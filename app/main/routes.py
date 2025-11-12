@@ -98,7 +98,7 @@ def items(travel_id):
         pi.item_id for pi in PurposeItem.query.filter(PurposeItem.purpose_id.in_(purpose_ids)).all()
         ]
 
-    items = Item.query.filter(
+    purpose_items = Item.query.filter(
         Item.id.in_(item_ids),
         and_(
             Item.for_season.in_([season, "all"]),
@@ -109,7 +109,18 @@ def items(travel_id):
         )
     ).all()
 
+    general_items = Item.query.filter(
+        ~Item.id.in_(PurposeItem.query.with_entities(PurposeItem.item_id).subquery()),
+        Item.for_season.in_([season, "all"]),
+        Item.for_transport.in_([transport, "all"]),
+        Item.for_weather.in_([weather, "all"]),
+        or_(Item.min_days.is_(None), Item.min_days <= days),
+        or_(Item.max_days.is_(None), Item.max_days >= days)
+    ).all()
+
     item_list = []
+    items = purpose_items + general_items
+
     for item in items:
         if item.for_gender == "male":
             quantity = travel.male_count
