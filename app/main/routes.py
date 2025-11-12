@@ -47,7 +47,6 @@ def new_travel():
             male_count = int(request.form.get("male_count") or 0)
             female_count = int(request.form.get("female_count") or 0)
             child_count = int(request.form.get("child_count") or 0)
-            purpose = ""
             transport = request.form.get("transport", "")
 
             new_travel = Travel(
@@ -59,7 +58,6 @@ def new_travel():
                 male_count=male_count,
                 female_count=female_count,
                 child_count=child_count,
-                purpose=purpose,
                 transport=transport
             )
 
@@ -143,7 +141,7 @@ def select_purpose(travel_id):
         selected = request.form.get("purposes", "")
         purpose_ids = [int(x) for x in selected.split(',') if x]
         
-        TravelPurpose.query.filter(travel_id=travel_id).delete()
+        TravelPurpose.query.filter_by(travel_id=travel_id).delete()
 
         for pid in purpose_ids:
             tp = TravelPurpose(travel_id=travel_id, purpose_id=pid)
