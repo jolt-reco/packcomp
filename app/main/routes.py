@@ -1,11 +1,17 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Travel, Item, Purpose, TravelPurpose, PurposeItem
+from app.models import Travel, Item, Purpose, TravelPurpose, PurposeItem, CustomItem
 from datetime import datetime
 from app.main import main_bp
 from sqlalchemy import and_, or_
 from itertools import groupby
+import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = "app/static/uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
 
 @main_bp.route("/")
 def top():
@@ -166,3 +172,34 @@ def select_purpose(travel_id):
         for category, purposes_in_cat in groupby(purposes, key=lambda x: x.category)
         }
     return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
+
+@main_bp.route("/custom_item", method=["GET", "POST"])
+@login_required
+def custom_item():
+    if request.method == "POST":
+        name = request.form["name"]
+        category = request.form["category"]
+        note = request.form.get("note")
+        image_file = request.files.get("image")
+        image_path = None
+        if image_file and image_file.filename:
+            filename = secure_filename(image_file.filename)
+            path = os.path.join(UPLOAD_FOLDER, filename)
+            image_file.save(path)
+            image_path = f"/static/uploads/{filename}"
+
+        new_item = CustomItem(
+            user_id=current_user.id,
+            name=name,
+            category=category,
+            note=note,
+            image_path=image_path
+        )
+        db.session.add(new_item)
+        db.session.commit()
+        flash("アイテムを追加しました!")
+        return redirect(url_for("main.items"))
+    
+    categories = db.session.query(Item.category).distinct().all()
+    categories = [c[0] for c in categories]
+    return render_template("custom_items.html", categories=categories)
