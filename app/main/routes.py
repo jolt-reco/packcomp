@@ -173,7 +173,7 @@ def select_purpose(travel_id):
         }
     return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
 
-@main_bp.route("/custom_item", method=["GET", "POST"])
+@main_bp.route("/custom_item", methods=["GET", "POST"])
 @login_required
 def custom_item():
     if request.method == "POST":
