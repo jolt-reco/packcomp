@@ -1,7 +1,17 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from app import db
-from app.models import Travel, Item, Purpose, TravelPurpose, PurposeItem, CustomItem
+from app.models import (
+    Travel,
+    Item, 
+    Purpose, 
+    TravelPurpose, 
+    PurposeItem, 
+    CustomItem, 
+    TravelItem,
+    MySet,
+    MySetItem
+)
 from datetime import datetime
 from app.main import main_bp
 from sqlalchemy import and_, or_
@@ -104,6 +114,10 @@ def items(travel_id):
         pi.item_id for pi in PurposeItem.query.filter(PurposeItem.purpose_id.in_(purpose_ids)).all()
         ]
 
+    my_set_ids =[
+        mi.id for mi in MySet.query.filter(MySet.user_id == current_user.id).all()
+    ]
+
     purpose_items = Item.query.filter(
         Item.id.in_(item_ids),
         and_(
@@ -124,10 +138,23 @@ def items(travel_id):
         or_(Item.max_days.is_(None), Item.max_days >= days)
     ).all()
 
-    item_list = []
-    items = purpose_items + general_items
+    custom_items = CustomItem.query.filter_by(
+        user_id=current_user.id
+    ).all()
 
-    for item in items:
+    my_set_items = MySetItem.query.filter(
+        MySetItem.my_set_id.in_(my_set_ids)
+    ).all()
+
+    ini_items = purpose_items + general_items
+    for item in ini_items:
+        exists = TravelItem.query.filter_by(
+            travel_id=travel_id,
+            item_id=item.id
+        ).first()
+        if exists:
+            continue
+
         if item.for_gender == "male":
             quantity = travel.male_count
         elif item.for_gender == "female":
@@ -137,16 +164,68 @@ def items(travel_id):
         else:
             quantity = travel.male_count + travel.female_count + travel.child_count
 
-        item_list.append({
-                "name": item.name,
-                "category": item.category,
-                "quantity": quantity
-            })
+        ini_ti = TravelItem(
+            my_set_item_id=None,
+            item_id=item.id,
+            custom_item_id=None,
+            travel_id=travel_id,
+            quantity=quantity,
+            note=None,
+            check_flag=False
+        )
+        db.session.add(ini_ti)
+    db.session.commit()
+    
+    for cus_item in custom_items:
+        exists = TravelItem.query.filter_by(
+            travel_id=travel_id,
+            custom_item_id=cus_item.id
+        ).first()
+        if exists:
+            continue
+
+        ti = TravelItem(
+            my_set_item_id=None,
+            item_id=None,
+            custom_item_id=cus_item.id,
+            travel_id=travel_id,
+            quantity=1,
+            note=None,
+            check_flag=False
+        )
+        db.session.add(ti)
+    db.session.commit()
+    
+    for mys_item in my_set_items:
+        exists = TravelItem.query.filter_by(
+            travel_id=travel_id,
+            my_set_item_id=mys_item.id
+        ).first()
+        if exists:
+            continue
+        
+        same_item = TravelItem.query.filter_by(
+            travel_id=travel_id,
+            item_id=mys_item.item_id
+        ).first()
+        if same_item:
+            continue
+        
+        mi = TravelItem(
+            my_set_item_id=mys_item.id,
+            item_id=None,
+            custom_item_id=None,
+            travel_id=travel_id,
+            quantity=1,
+            note=None,
+            check_flag=False
+        )
+        db.session.add(mi)
+    db.session.commit()
 
     return render_template(
         "items_list.html",
-        travel=travel,
-        items=item_list
+        travel=travel
     )
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
