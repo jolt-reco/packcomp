@@ -225,10 +225,42 @@ def items(travel_id):
 
     travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
 
+    display_items = []
+    for disp_ti in travel_items:
+        if disp_ti.item:
+            name = disp_ti.item.name
+            category = disp_ti.item.category
+        elif disp_ti.custom_item:
+            name = disp_ti.custom_item.name
+            category = disp_ti.custom_item.category
+        else:
+            disp_mi=disp_ti.my_set_item
+            if disp_mi and disp_mi.item:
+                name = disp_mi.item.name
+                category = disp_mi.item.category
+            elif disp_mi and disp_mi.custom_item:
+                name = disp_mi.custom_item.name
+                category = disp_mi.custom_item.category
+            else:
+                name = "不明"
+                category = "その他"
+
+        display_items.append({
+            "name": name,
+            "category": category,
+            "quantity": disp_ti.quantity
+        })
+
+    items_category = {}
+
+    for di in display_items:
+        cat = di["category"]
+        items_category.setdefault(cat, []).append(di)
+
     return render_template(
         "items_list.html",
         travel=travel,
-        travel_items=travel_items
+        items_category=items_category
     )
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
