@@ -210,7 +210,7 @@ def items(travel_id):
         ).first()
         if same_item:
             continue
-        
+
         mi = TravelItem(
             my_set_item_id=mys_item.id,
             item_id=None,
@@ -223,9 +223,12 @@ def items(travel_id):
         db.session.add(mi)
     db.session.commit()
 
+    travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
+
     return render_template(
         "items_list.html",
-        travel=travel
+        travel=travel,
+        travel_items=travel_items
     )
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
