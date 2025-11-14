@@ -5,8 +5,15 @@
 {% block content %}
 <h2>{{ travel.title }}（{{ travel.destination }}）の持ち物リスト</h2>
 <ul>
-    {% for item in items %}
-        <li>{{ item.name }} {{ item.category }} 個数: {{ item.quantity }}</li>
+    {% for category, items in items_category.items() %}
+        <h3>{{ category }}</h3>
+        <ul>
+            {% for ti in items %}
+                <li>
+                    {{ ti.name }}（{{ ti.quantity }}）
+                </li>
+            {% endfor %}
+        </ul>
     {% endfor %}
 </ul>
 <a href="{{ url_for('main.new_travel') }}">戻る</a>
