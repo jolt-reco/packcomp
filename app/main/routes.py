@@ -316,4 +316,4 @@ def custom_item():
     
     categories = db.session.query(Item.category).distinct().all()
     categories = [c[0] for c in categories]
-    return render_template("custom_items.html", categories=categories)
+    return render_template("custom_items_form.html", categories=categories)
