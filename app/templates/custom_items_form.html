@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>アイテムを追加</h2>
-<form method="POST" action="{{ url_for('main.custom_item') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ url_for('main.new_custom_item') }}" enctype="multipart/form-data">
     <label>アイテム名 <br><input type="text" name="name"></label><br>
    <label>カテゴリー <br>
         <select name="category">
