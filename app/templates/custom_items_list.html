@@ -9,6 +9,10 @@
     {% for item in custom_items %}
         <li>
             {{ item.name }}（{{ item.category }}）
+            <form method="POST" action="{{ url_for('main.add_custom_to_travel', travel_id=travel.id) }}" style="display:inline;">
+                <input type="hidden" name="custom_item_id" value="{{ item.id }}">
+                <button type="submit">リストへ追加</button>
+            </form>
         </li>
     {% else %}
         <p>まだカスタムアイテムはありません。</p>
