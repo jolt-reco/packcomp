@@ -323,7 +323,7 @@ def new_custom_item():
         db.session.add(new_item)
         db.session.commit()
         flash("アイテムを追加しました!")
-        return redirect(url_for("main.items"))
+        return redirect(url_for("main.custom_items_list"))
     
     categories = db.session.query(Item.category).distinct().all()
     categories = [c[0] for c in categories]
