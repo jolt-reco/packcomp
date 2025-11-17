@@ -286,10 +286,21 @@ def select_purpose(travel_id):
         for category, purposes_in_cat in groupby(purposes, key=lambda x: x.category)
         }
     return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
-
 @main_bp.route("/custom_item", methods=["GET", "POST"])
 @login_required
-def custom_item():
+def custom_items_list():
+    custom_items = CustomItem.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    return render_template(
+        "custom_item_list.html",
+        custom_items=custom_items
+    )
+
+@main_bp.route("/custom_item/new", methods=["GET", "POST"])
+@login_required
+def new_custom_item():
     if request.method == "POST":
         name = request.form["name"]
         category = request.form["category"]
