@@ -3,7 +3,7 @@
 {% block title %}ユーザー追加アイテムリスト{% endblock %}
 
 {% block content %}
-<h2>{{ current_user.name }}の追加アイテムリスト</h2>
+<h2>{{ current_user.user_name }}の追加アイテムリスト</h2>
 
 <ul>
     {% for item in custom_items %}
