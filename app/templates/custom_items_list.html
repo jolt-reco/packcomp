@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}ユーザー追加アイテムリスト{% endblock %}
+
+{% block content %}
+<h2>{{ user.name }}の追加アイテムリスト</h2>
+
+<ul>
+    {% for item in custom_items %}
+        <li>
+            {{ item.name }}（{{ item.category }}）
+        </li>
+    {% else %}
+        <p>まだカスタムアイテムはありません。</p>
+    {% endfor %}
+</ul>
+
+<br>
+<a href="{{ url_for('main.custom_item_new') }}">新規追加</a>
+{% endblock %}
