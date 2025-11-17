@@ -286,6 +286,7 @@ def select_purpose(travel_id):
         for category, purposes_in_cat in groupby(purposes, key=lambda x: x.category)
         }
     return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
+
 @main_bp.route("/custom_item", methods=["GET", "POST"])
 @login_required
 def custom_items_list():
