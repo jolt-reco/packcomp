@@ -294,7 +294,7 @@ def custom_items_list():
     ).all()
 
     return render_template(
-        "custom_item_list.html",
+        "custom_items_list.html",
         custom_items=custom_items
     )
 
