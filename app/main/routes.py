@@ -138,10 +138,6 @@ def items(travel_id):
         or_(Item.max_days.is_(None), Item.max_days >= days)
     ).all()
 
-    custom_items = CustomItem.query.filter_by(
-        user_id=current_user.id
-    ).all()
-
     my_set_items = MySetItem.query.filter(
         MySetItem.my_set_id.in_(my_set_ids)
     ).all()
@@ -175,27 +171,7 @@ def items(travel_id):
         )
         db.session.add(ini_ti)
     db.session.commit()
-    
-    for cus_item in custom_items:
-        exists = TravelItem.query.filter_by(
-            travel_id=travel_id,
-            custom_item_id=cus_item.id
-        ).first()
-        if exists:
-            continue
-
-        ti = TravelItem(
-            my_set_item_id=None,
-            item_id=None,
-            custom_item_id=cus_item.id,
-            travel_id=travel_id,
-            quantity=1,
-            note=None,
-            check_flag=False
-        )
-        db.session.add(ti)
-    db.session.commit()
-    
+        
     for mys_item in my_set_items:
         exists = TravelItem.query.filter_by(
             travel_id=travel_id,
@@ -209,6 +185,13 @@ def items(travel_id):
             item_id=mys_item.item_id
         ).first()
         if same_item:
+            continue
+
+        same_custom = TravelItem.query.filter_by(
+            travel_id=travel_id,
+            custom_item_id=mys_item.custom_item_id
+        ).first()
+        if same_custom:
             continue
 
         mi = TravelItem(
@@ -287,16 +270,18 @@ def select_purpose(travel_id):
         }
     return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
 
-@main_bp.route("/custom_item", methods=["GET", "POST"])
+@main_bp.route("/custom_item/<int:travel_id>", methods=["GET", "POST"])
 @login_required
-def custom_items_list():
+def custom_items_list(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
     custom_items = CustomItem.query.filter_by(
         user_id=current_user.id
     ).all()
 
     return render_template(
         "custom_items_list.html",
-        custom_items=custom_items
+        custom_items=custom_items,
+        travel=travel
     )
 
 @main_bp.route("/custom_item/new", methods=["GET", "POST"])
@@ -329,3 +314,33 @@ def new_custom_item():
     categories = db.session.query(Item.category).distinct().all()
     categories = [c[0] for c in categories]
     return render_template("custom_items_form.html", categories=categories)
+
+@main_bp.route("/travel/<int:travel_id>/add_custom_item", methods=["POST"])
+@login_required
+def add_custom_to_travel(travel_id):
+    custom_item_id = request.form.get("custom_item_id")
+    if not custom_item_id:
+        flash("アイテムIDがありません")
+        return redirect(url_for("main.custom_items_list"))
+
+    exists = TravelItem.query.filter_by(
+        travel_id=travel_id,
+        custom_item_id=custom_item_id
+    ).first()
+    if exists:
+        flash("すでにリストに追加されています")
+        return redirect(url_for("main.items", travel_id=travel_id))
+
+    cus_ti = TravelItem(
+        travel_id=travel_id,
+        item_id=None,
+        custom_item_id=custom_item_id,
+        my_set_item_id=None,
+        quantity=1,
+        note=None,
+        check_flag=False
+    )
+    db.session.add(cus_ti)
+    db.session.commit()
+    flash("アイテムを持ち物リストに追加しました")
+    return redirect(url_for("main.items", travel_id=travel_id))
