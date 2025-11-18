@@ -289,3 +289,15 @@ label{
 .submit-btn:hover {
   background-color: #43a047;
 }
+
+/* ====== 持ち物リスト画面用 ====== */
+.item-card {
+  display: flex;
+}
+
+#down, #up {
+  font-size: 25px;
+  padding: 0 14px;
+  cursor: pointer;
+  user-select: none;
+}
