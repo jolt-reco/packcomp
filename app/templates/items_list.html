@@ -7,15 +7,35 @@
 <ul>
     {% for category, items in items_category.items() %}
         <h3>{{ category }}</h3>
-        <ul>
+        <div class="item-row">
             {% for ti in items %}
-                <li>
-                    {{ ti.name }}（{{ ti.quantity }}）
-                </li>
+                    {{ ti.name }}
+                    <div class="down">-</div>
+                    <input type="number" class="qty" value="{{ ti.quantity }}" min="1">
+                    <div class="up">+</div>
             {% endfor %}
-        </ul>
+        </div>
     {% endfor %}
 </ul>
-<a href="{{ url_for('main.new_travel') }}">戻る</a>
+<button type="submit">数量を更新</button>
+<a href="{{ url_for('main.travels_list') }}">戻る</a>
 <a href="{{ url_for('main.custom_items_list', travel_id=travel.id) }}">アイテムを追加</a>
+
+<script>
+    document.querySelectorAll(".item-row").forEach(row => {
+        const down = row.querySelector(".down");
+        const up = row.querySelector(".up");
+        const qty = row.querySelector(".qty");
+
+        down.addEventListener("click", () => {
+            const v = parseInt(qty.value);
+            if (v > 1) qty.value = v - 1;
+        });
+
+        up.addEventListener("click", () => {
+            qty.value = parseInt(qty.value) + 1;
+        });
+    });
+</script>
+
 {% endblock %}
