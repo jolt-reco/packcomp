@@ -11,18 +11,17 @@
         {% for category, items in items_category.items() %}
             <h3>{{ category }}</h3>
                 {% for ti in items %}
-                <div class="item-row">
+                <div class="item-row" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
                         {{ ti.name }}
                         <div class="down">-</div>
                         <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
                         <div class="up">+</div>
+                        <button type="button" class="delete-btn">削除</button>
                 </div>
                 {% endfor %}
         {% endfor %}
     </ul>
-
     <button type="submit">数量を更新</button>
-
 </form>
 
 <a href="{{ url_for('main.travels_list') }}">戻る</a>
@@ -33,6 +32,9 @@
         const down = row.querySelector(".down");
         const up = row.querySelector(".up");
         const qty = row.querySelector(".qty");
+        const deleteBtn = row.querySelector(".delete-btn");
+        const travelId = row.dataset.travelId;
+        const itemId = row.dataset.itemId;
 
         down.addEventListener("click", () => {
             const v = parseInt(qty.value);
@@ -42,6 +44,22 @@
         up.addEventListener("click", () => {
             qty.value = parseInt(qty.value) + 1;
         });
+
+        deleteBtn.addEventListener("click", () => {
+            if(!confirm("本当に削除しますか？")) return;
+
+        fetch(`/list/${travelId}/delete/${itemId}`, {
+            method: "POST",
+        })
+        .then(res => {
+            if(res.ok) {
+                row.remove(); // 削除成功したらDOMから消す
+            } else {
+                alert("削除できませんでした");
+            }
+        })
+        .catch(() => alert("通信エラー"));
+        })
     });
 </script>
 
