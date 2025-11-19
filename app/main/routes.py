@@ -142,69 +142,71 @@ def items(travel_id):
         MySetItem.my_set_id.in_(my_set_ids)
     ).all()
 
-    ini_items = purpose_items + general_items
-    for item in ini_items:
-        exists = TravelItem.query.filter_by(
-            travel_id=travel_id,
-            item_id=item.id
-        ).first()
-        if exists:
-            continue
+    existing_items = TravelItem.query.filter_by(travel_id=travel.id).all()
+    if not existing_items:
+        ini_items = purpose_items + general_items
+        for item in ini_items:
+            exists = TravelItem.query.filter_by(
+                travel_id=travel_id,
+                item_id=item.id
+            ).first()
+            if exists:
+                continue
 
-        if item.for_gender == "male":
-            quantity = travel.male_count
-        elif item.for_gender == "female":
-            quantity = travel.female_count
-        elif item.for_gender == "child":
-            quantity = travel.child_count
-        else:
-            quantity = travel.male_count + travel.female_count + travel.child_count
+            if item.for_gender == "male":
+                quantity = travel.male_count
+            elif item.for_gender == "female":
+                quantity = travel.female_count
+            elif item.for_gender == "child":
+                quantity = travel.child_count
+            else:
+                quantity = travel.male_count + travel.female_count + travel.child_count
 
-        ini_ti = TravelItem(
-            my_set_item_id=None,
-            item_id=item.id,
-            custom_item_id=None,
-            travel_id=travel_id,
-            quantity=quantity,
-            note=None,
-            check_flag=False
-        )
-        db.session.add(ini_ti)
-    db.session.commit()
-        
-    for mys_item in my_set_items:
-        exists = TravelItem.query.filter_by(
-            travel_id=travel_id,
-            my_set_item_id=mys_item.id
-        ).first()
-        if exists:
-            continue
-        
-        same_item = TravelItem.query.filter_by(
-            travel_id=travel_id,
-            item_id=mys_item.item_id
-        ).first()
-        if same_item:
-            continue
+            ini_ti = TravelItem(
+                my_set_item_id=None,
+                item_id=item.id,
+                custom_item_id=None,
+                travel_id=travel_id,
+                quantity=quantity,
+                note=None,
+                check_flag=False
+            )
+            db.session.add(ini_ti)
+        db.session.commit()
+            
+        for mys_item in my_set_items:
+            exists = TravelItem.query.filter_by(
+                travel_id=travel_id,
+                my_set_item_id=mys_item.id
+            ).first()
+            if exists:
+                continue
+            
+            same_item = TravelItem.query.filter_by(
+                travel_id=travel_id,
+                item_id=mys_item.item_id
+            ).first()
+            if same_item:
+                continue
 
-        same_custom = TravelItem.query.filter_by(
-            travel_id=travel_id,
-            custom_item_id=mys_item.custom_item_id
-        ).first()
-        if same_custom:
-            continue
+            same_custom = TravelItem.query.filter_by(
+                travel_id=travel_id,
+                custom_item_id=mys_item.custom_item_id
+            ).first()
+            if same_custom:
+                continue
 
-        mi = TravelItem(
-            my_set_item_id=mys_item.id,
-            item_id=None,
-            custom_item_id=None,
-            travel_id=travel_id,
-            quantity=1,
-            note=None,
-            check_flag=False
-        )
-        db.session.add(mi)
-    db.session.commit()
+            mi = TravelItem(
+                my_set_item_id=mys_item.id,
+                item_id=None,
+                custom_item_id=None,
+                travel_id=travel_id,
+                quantity=1,
+                note=None,
+                check_flag=False
+            )
+            db.session.add(mi)
+        db.session.commit()
 
     travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
 
@@ -275,6 +277,17 @@ def delete_item(travel_id, item_id):
     db.session.commit()
 
     return "", 200
+
+@main_bp.route("/list/<int:travel_id>/reset", methods=["POST"])
+@login_required
+def reset_items(travel_id):
+    # TravelItem 全削除
+    TravelItem.query.filter_by(travel_id=travel_id).delete()
+    db.session.commit()
+
+    # items へ戻る → 初期生成が走る
+    return redirect(url_for("main.items", travel_id=travel_id))
+
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
 @login_required
