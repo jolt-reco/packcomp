@@ -237,6 +237,9 @@ def items(travel_id):
             "quantity": disp_ti.quantity
         })
 
+        display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
+
+
     items_category = {}
 
     for di in display_items:
