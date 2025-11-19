@@ -229,6 +229,7 @@ def items(travel_id):
                 category = "その他"
 
         display_items.append({
+            "id": disp_ti.id,
             "name": name,
             "category": category,
             "quantity": disp_ti.quantity
@@ -245,6 +246,27 @@ def items(travel_id):
         travel=travel,
         items_category=items_category
     )
+
+@main_bp.route("/update_quantities/<int:travel_id>", methods=["POST"])
+@login_required
+def update_quantities(travel_id):
+    for key, value in request.form.items():
+        if not key.startswith("qty_"):
+            continue
+        try:
+            item_id = int(key.replace("qty_", ""))
+        except (IndexError, ValueError):
+            continue 
+        
+        qty = int(value)
+
+        ti = TravelItem.query.get(item_id)
+        if ti and ti.travel_id == travel_id:
+            ti.quantity = qty
+
+    db.session.commit()
+    return redirect(url_for('main.items', travel_id=travel_id))
+
 
 @main_bp.route("/travel/<int:travel_id>/select_purpose", methods=["GET", "POST"])
 @login_required
