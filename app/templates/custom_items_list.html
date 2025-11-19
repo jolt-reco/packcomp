@@ -20,5 +20,5 @@
 </ul>
 
 <br>
-<a href="{{ url_for('main.new_custom_item') }}">新規追加</a>
+<a href="{{ url_for('main.new_custom_item', travel_id=travel.id) }}">新規追加</a>
 {% endblock %}

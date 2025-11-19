@@ -330,9 +330,9 @@ def custom_items_list(travel_id):
         travel=travel
     )
 
-@main_bp.route("/custom_item/new", methods=["GET", "POST"])
+@main_bp.route("/custom_item/new/<int:travel_id>", methods=["GET", "POST"])
 @login_required
-def new_custom_item():
+def new_custom_item(travel_id):
     if request.method == "POST":
         name = request.form["name"]
         category = request.form["category"]
@@ -355,11 +355,11 @@ def new_custom_item():
         db.session.add(new_item)
         db.session.commit()
         flash("アイテムを追加しました!")
-        return redirect(url_for("main.custom_items_list"))
+        return redirect(url_for("main.custom_items_list", travel_id=travel_id))
     
     categories = db.session.query(Item.category).distinct().all()
     categories = [c[0] for c in categories]
-    return render_template("custom_items_form.html", categories=categories)
+    return render_template("custom_items_form.html", categories=categories, travel_id=travel_id)
 
 @main_bp.route("/travel/<int:travel_id>/add_custom_item", methods=["POST"])
 @login_required
