@@ -468,3 +468,17 @@ def get_myset_items(my_set_id):
         })
 
     return {"items": result}, 200
+
+@main_bp.route("/myset/<int:my_set_id>/delete", methods=["POST"])
+@login_required
+def delete_myset(my_set_id):
+    myset = MySet.query.get_or_404(my_set_id)
+    if myset.user_id != current_user.id:
+        return "", 403
+
+    # 関連する MySetItem もまとめて削除
+    MySetItem.query.filter_by(my_set_id=myset.id).delete()
+    db.session.delete(myset)
+    db.session.commit()
+    return "", 200
+
