@@ -29,6 +29,8 @@
 
 <a href="{{ url_for('main.travels_list') }}">戻る</a>
 <a href="{{ url_for('main.custom_items_list', travel_id=travel.id) }}">アイテムを追加</a>
+<a href="{{ url_for('main.mysets_list', travel_id=travel.id) }}">マイセットを表示</a>
+
 
 <form method="POST" action="{{ url_for('main.reset_items', travel_id=travel.id) }}">
     <button type="submit">リストを再生成</button>
