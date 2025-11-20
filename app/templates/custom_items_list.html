@@ -5,20 +5,44 @@
 {% block content %}
 <h2>{{ current_user.user_name }}の追加アイテムリスト</h2>
 
-<ul>
     {% for item in custom_items %}
-        <li>
+        <div class="custom-item-row" data-travel-id="{{ travel.id }}" data-item-id="{{ item.id }}">
             {{ item.name }}（{{ item.category }}）
-            <form method="POST" action="{{ url_for('main.add_custom_to_travel', travel_id=travel.id) }}" style="display:inline;">
-                <input type="hidden" name="custom_item_id" value="{{ item.id }}">
-                <button type="submit">リストへ追加</button>
-            </form>
-        </li>
+                <form method="POST" action="{{ url_for('main.add_custom_to_travel', travel_id=travel.id) }}" style="display:inline;">
+                    <input type="hidden" name="custom_item_id" value="{{ item.id }}">
+                    <button type="submit">リストへ追加</button>
+                    <button type="button" class="delete-btn">削除</button>
+                </form>
+        </div>
     {% else %}
         <p>まだカスタムアイテムはありません。</p>
     {% endfor %}
-</ul>
 
 <br>
 <a href="{{ url_for('main.new_custom_item', travel_id=travel.id) }}">新規追加</a>
+
+<script>
+    document.querySelectorAll(".custom-item-row").forEach(row => {
+        const deleteBtn = row.querySelector(".delete-btn");
+        const travelId = row.dataset.travelId;
+        const itemId = row.dataset.itemId;
+
+        deleteBtn.addEventListener("click", () => {
+            if(!confirm("本当に削除しますか？")) return;
+
+        fetch(`/custom_item/${travelId}/delete/${itemId}`, {
+            method: "POST",
+        })
+        .then(res => {
+            if(res.ok) {
+                row.remove(); // 削除成功したらDOMから消す
+            } else {
+                alert("削除できませんでした");
+            }
+        })
+        .catch(() => alert("通信エラー"));
+        })
+    });
+</script>
+
 {% endblock %}
