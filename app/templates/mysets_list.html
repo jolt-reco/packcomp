@@ -12,6 +12,7 @@
         <div class="myset-block" data-myset-id="{{ ms.id }}">
             <h3 class="myset-title">{{ ms.name }}</h3>
             <div class="myset-items hidden"></div>
+            <div class="delete-btn">削除</div>
         </div>
     {% else %}
         <p>まだマイセットはありません。</p>
@@ -22,6 +23,7 @@
 document.querySelectorAll(".myset-block").forEach(block => {
     const title = block.querySelector(".myset-title");
     const itemsBox = block.querySelector(".myset-items");
+    const deleteBtn = block.querySelector(".delete-btn");
     const mysetId = block.dataset.mysetId;
 
     title.addEventListener("click", () => {
@@ -53,6 +55,22 @@ document.querySelectorAll(".myset-block").forEach(block => {
             .catch(() => {
                 alert("読み込みエラー");
             });
+    });
+
+    deleteBtn.addEventListener("click", () => {
+        if(!confirm("このマイセットを本当に削除しますか？")) return;
+
+        fetch(`/myset/${mysetId}/delete`, {
+            method: "POST",
+        })
+        .then(res => {
+            if(res.ok){
+                block.remove();  // 削除成功したら DOM から消す
+            } else {
+                alert("削除に失敗しました");
+            }
+        })
+        .catch(() => alert("通信エラー"));
     });
 });
 </script>
