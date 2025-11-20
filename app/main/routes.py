@@ -430,10 +430,41 @@ def new_myset():
             my_set_id=new_myset.id,
             item_id=ti.item_id,
             custom_item_id=ti.custom_item_id,
-            quantity=ti.quantity
         )
         db.session.add(new_item)
 
     db.session.commit()
 
     return "", 200   
+
+@main_bp.route("/mysets/<int:travel_id>")
+@login_required
+def mysets_list(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+    mysets = MySet.query.filter_by(user_id=current_user.id).all()
+
+    return render_template(
+        "mysets_list.html",
+        travel=travel,
+        mysets=mysets
+    )
+
+@main_bp.route("/myset/<int:my_set_id>/items")
+@login_required
+def get_myset_items(my_set_id):
+    items = (
+        db.session.query(MySetItem, Item, CustomItem)
+        .outerjoin(Item, MySetItem.item_id == Item.id)
+        .outerjoin(CustomItem, MySetItem.custom_item_id == CustomItem.id)
+        .filter(MySetItem.my_set_id == my_set_id)
+        .all()
+    )
+
+    result = []
+    for ms_item, item, citem in items:
+        result.append({
+            "name": item.name if item else citem.name,
+            "category": item.category if item else citem.category
+        })
+
+    return {"items": result}, 200
