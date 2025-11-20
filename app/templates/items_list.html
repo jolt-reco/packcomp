@@ -12,6 +12,7 @@
             <h3>{{ category }}</h3>
                 {% for ti in items %}
                 <div class="item-row" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
+                        <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
                         {{ ti.name }}
                         <div class="down">-</div>
                         <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
@@ -23,6 +24,8 @@
     </ul>
     <button type="submit">数量を更新</button>
 </form>
+
+<button type="button" id="register-myset-btn">マイセットに登録</button>
 
 <a href="{{ url_for('main.travels_list') }}">戻る</a>
 <a href="{{ url_for('main.custom_items_list', travel_id=travel.id) }}">アイテムを追加</a>
@@ -65,6 +68,40 @@
         })
         .catch(() => alert("通信エラー"));
         })
+    });
+
+    document.getElementById("register-myset-btn").addEventListener("click", () => {
+        const selectedIds = Array.from(document.querySelectorAll(".select-for-myset:checked")).map(input => input.value);
+
+        if(selectedIds.length === 0){
+            alert("アイテムを選択してください");
+            return;
+        }
+
+        const mysetName = prompt("マイセット名を入力してください");
+        if(!mysetName) return;
+
+        fetch("/myset/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: mysetName,
+                item_ids: selectedIds,
+                travel_id: {{ travel.id }}
+            })
+        })
+        .then(res => {
+            if(res.ok){
+                alert("マイセットに登録しました");
+                // チェックをリセット
+                document.querySelectorAll(".select-for-myset:checked").forEach(cb => cb.checked = false);
+            } else {
+                alert("登録に失敗しました");
+            }
+        })
+        .catch(() => alert("通信エラー"));
     });
 </script>
 
