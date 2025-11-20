@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}マイセット一覧{% endblock %}
+
+{% block content %}
+<h2>マイセット一覧</h2>
+
+<a href="{{ url_for('main.items', travel_id=travel.id) }}">← 持ち物リストへ戻る</a>
+
+<div id="myset-container">
+    {% for ms in mysets %}
+        <div class="myset-block" data-myset-id="{{ ms.id }}">
+            <h3 class="myset-title">{{ ms.name }}</h3>
+            <div class="myset-items hidden"></div>
+        </div>
+    {% else %}
+        <p>まだマイセットはありません。</p>
+    {% endfor %}
+</div>
+
+<script>
+document.querySelectorAll(".myset-block").forEach(block => {
+    const title = block.querySelector(".myset-title");
+    const itemsBox = block.querySelector(".myset-items");
+    const mysetId = block.dataset.mysetId;
+
+    title.addEventListener("click", () => {
+        // すでに開いていたら閉じる
+        if (!itemsBox.classList.contains("hidden")) {
+            itemsBox.classList.add("hidden");
+            itemsBox.innerHTML = "";
+            return;
+        }
+
+        // Ajax で中身取得
+        fetch(`/myset/${mysetId}/items`)
+            .then(res => res.json())
+            .then(data => {
+                const items = data.items;
+
+                if(items.length === 0){
+                    itemsBox.innerHTML = "<p>中身は空です</p>";
+                } else {
+                    itemsBox.innerHTML = items.map(i => `
+                        <div class="item-line">
+                            ${i.name}（${i.category}）
+                        </div>
+                    `).join("");
+                }
+
+                itemsBox.classList.remove("hidden");
+            })
+            .catch(() => {
+                alert("読み込みエラー");
+            });
+    });
+});
+</script>
+
+{% endblock %}
