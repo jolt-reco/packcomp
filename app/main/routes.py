@@ -400,3 +400,40 @@ def delete_custom_item(travel_id, item_id):
 
     return "", 200
 
+@main_bp.route("/myset/create", methods=["POST"])
+@login_required
+def new_myset():
+    data = request.get_json()
+
+    myset_name = data.get("name")
+    item_ids = data.get("item_ids", [])
+    travel_id = data.get("travel_id")
+
+    if not myset_name or not item_ids:
+        return {"error": "invalid data"}, 400
+
+    # ① マイセット本体登録
+    new_myset = MySet(
+        name=myset_name,
+        user_id=current_user.id
+    )
+    db.session.add(new_myset)
+    db.session.commit()  # ここで new_myset.id が確定
+
+    # ② MySetItems の登録
+    for tid in item_ids:
+        ti = TravelItem.query.get(tid)
+        if ti is None:
+            continue
+
+        new_item = MySetItem(
+            my_set_id=new_myset.id,
+            item_id=ti.item_id,
+            custom_item_id=ti.custom_item_id,
+            quantity=ti.quantity
+        )
+        db.session.add(new_item)
+
+    db.session.commit()
+
+    return "", 200   
