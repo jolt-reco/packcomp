@@ -390,3 +390,13 @@ def add_custom_to_travel(travel_id):
     db.session.commit()
     flash("アイテムを持ち物リストに追加しました")
     return redirect(url_for("main.items", travel_id=travel_id))
+
+@main_bp.route("/custom_item/<int:travel_id>/delete/<int:item_id>", methods=["POST"])
+@login_required
+def delete_custom_item(travel_id, item_id):
+    ci = CustomItem.query.get_or_404(item_id)
+    db.session.delete(ci)
+    db.session.commit()
+
+    return "", 200
+
