@@ -138,7 +138,6 @@ class MySetItem(db.Model):
     my_set_id = db.Column(db.Integer, db.ForeignKey("my_sets.id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id"), nullable=True)
     custom_item_id = db.Column(db.Integer, db.ForeignKey("custom_items.id"), nullable=True)
-    quantity = db.Column(db.Integer, nullable=False)
     note = db.Column(db.String, nullable=True)
 
     my_set = db.relationship("MySet", back_populates="my_set_items")
