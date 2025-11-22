@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ myset.name }} 編集{% endblock %}
+
+{% block content %}
+<h2>{{ myset.name }} の編集</h2>
+
+<a href="{{ url_for('main.mysets_list', travel_id=travel_id) }}">← マイセット一覧に戻る</a>
+
+<h3>マイセット中身</h3>
+<div id="myset-items">
+    {% for category, ms_items in items_category.items() %}
+        <h4>{{ category }}</h4>
+            {% for ms_item in ms_items %}
+                <div class="myset-item" data-ms-item-id="{{ ms_item.id }}">
+                   {{ ms_item.name }}
+                    <button type="button" class="delete-btn">削除</button>
+                </div>
+            {% endfor %}
+    {% else %}
+        <p>まだアイテムはありません</p>
+    {% endfor %}
+</div>
+
+<script>
+    // 削除ボタン
+    document.querySelectorAll(".myset-item").forEach(row => {
+        const deleteBtn = row.querySelector(".delete-btn");
+        const msItemId = row.dataset.msItemId;
+
+        deleteBtn.addEventListener("click", () => {
+            if(!confirm("本当に削除しますか？")) return;
+
+            fetch(`/myset/{{ myset.id }}/item/${msItemId}/delete`, {
+                method: "POST"
+            })
+            .then(res => {
+                if(res.ok) {
+                    div.remove();
+                } else {
+                    alert("削除できませんでした");
+                }
+            })
+            .catch(() => alert("通信エラー"));
+        });
+    });
+</script>
+{% endblock %}
