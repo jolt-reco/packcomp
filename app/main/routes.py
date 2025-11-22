@@ -474,3 +474,48 @@ def delete_myset(my_set_id):
     db.session.commit()
     return "", 200
 
+@main_bp.route("/myset/<int:my_set_id>/edit")
+@login_required
+def edit_myset(my_set_id):
+    myset = MySet.query.filter_by(id=my_set_id, user_id=current_user.id).first_or_404()
+    ms_items = MySetItem.query.filter_by(myset_id=my_set_id).all()
+
+    all_items = Item.query.all()
+    all_custom_items = CustomItem.query.all()
+
+    display_items = []
+    for disp_mi in ms_items:
+        if disp_mi.item:
+            name = disp_mi.item.name
+            category = disp_mi.item.category
+        elif disp_mi.custom_item:
+            name = disp_mi.custom_item.name
+            category = disp_mi.custom_item.category
+        else:
+            name = "不明"
+            category = "その他"
+
+        display_items.append({
+            "id": disp_mi.id,
+            "name": name,
+            "category": category,
+        })
+
+    display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
+    
+    items_category = {}
+
+    for di in display_items:
+        cat = di["category"]
+        items_category.setdefault(cat, []).append(di)
+
+    return render_template(
+        "edit_myset.html",
+        myset=myset,
+        ms_items=ms_items,
+        all_items=all_items,
+        all_custom_items=all_custom_items,
+        items_category=items_category
+    )
+
+
