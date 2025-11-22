@@ -18,6 +18,8 @@
                 <button type="submit">このマイセットを追加</button>
             </form>
 
+            <a href="{{ url_for('main.edit_myset', my_set_id=ms.id, travel_id=travel.id) }}">編集</a>
+
             <div class="delete-btn">削除</div>
         </div>
     {% else %}
