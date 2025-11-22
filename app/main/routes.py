@@ -138,10 +138,6 @@ def items(travel_id):
         or_(Item.max_days.is_(None), Item.max_days >= days)
     ).all()
 
-    my_set_items = MySetItem.query.filter(
-        MySetItem.my_set_id.in_(my_set_ids)
-    ).all()
-
     existing_items = TravelItem.query.filter_by(travel_id=travel.id).all()
     if not existing_items:
         ini_items = purpose_items + general_items
@@ -172,40 +168,6 @@ def items(travel_id):
                 check_flag=False
             )
             db.session.add(ini_ti)
-        db.session.commit()
-            
-        for mys_item in my_set_items:
-            exists = TravelItem.query.filter_by(
-                travel_id=travel_id,
-                my_set_item_id=mys_item.id
-            ).first()
-            if exists:
-                continue
-            
-            same_item = TravelItem.query.filter_by(
-                travel_id=travel_id,
-                item_id=mys_item.item_id
-            ).first()
-            if same_item:
-                continue
-
-            same_custom = TravelItem.query.filter_by(
-                travel_id=travel_id,
-                custom_item_id=mys_item.custom_item_id
-            ).first()
-            if same_custom:
-                continue
-
-            mi = TravelItem(
-                my_set_item_id=mys_item.id,
-                item_id=None,
-                custom_item_id=None,
-                travel_id=travel_id,
-                quantity=1,
-                note=None,
-                check_flag=False
-            )
-            db.session.add(mi)
         db.session.commit()
 
     travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
