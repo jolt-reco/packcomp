@@ -518,4 +518,13 @@ def edit_myset(my_set_id):
         items_category=items_category
     )
 
+@main_bp.route("/myset/<int:my_set_id>/item/<int:ms_item_id>/delete", methods=["POST"])
+@login_required
+def delete_myset_item(my_set_id, ms_item_id):
+    ms_item = MySetItem.query.filter_by(id=ms_item_id, my_set_id=my_set_id).first_or_404()
+    db.session.delete(ms_item)
+    db.session.commit()
+    flash("削除しました")
+    return redirect(url_for("main.edit_myset", my_set_id=my_set_id))
+
 
