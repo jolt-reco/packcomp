@@ -474,11 +474,11 @@ def delete_myset(my_set_id):
     db.session.commit()
     return "", 200
 
-@main_bp.route("/myset/<int:my_set_id>/edit")
+@main_bp.route("/myset/<int:travel_id>/edit/<int:my_set_id>")
 @login_required
-def edit_myset(my_set_id):
+def edit_myset(my_set_id, travel_id):
     myset = MySet.query.filter_by(id=my_set_id, user_id=current_user.id).first_or_404()
-    ms_items = MySetItem.query.filter_by(myset_id=my_set_id).all()
+    ms_items = MySetItem.query.filter_by(my_set_id=my_set_id).all()
 
     all_items = Item.query.all()
     all_custom_items = CustomItem.query.all()
@@ -515,7 +515,8 @@ def edit_myset(my_set_id):
         ms_items=ms_items,
         all_items=all_items,
         all_custom_items=all_custom_items,
-        items_category=items_category
+        items_category=items_category,
+        travel_id=travel_id
     )
 
 @main_bp.route("/myset/<int:my_set_id>/item/<int:ms_item_id>/delete", methods=["POST"])
@@ -526,5 +527,3 @@ def delete_myset_item(my_set_id, ms_item_id):
     db.session.commit()
     flash("削除しました")
     return redirect(url_for("main.edit_myset", my_set_id=my_set_id))
-
-
