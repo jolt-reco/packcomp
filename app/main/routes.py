@@ -469,6 +469,36 @@ def get_myset_items(my_set_id):
 
     return {"items": result}, 200
 
+@main_bp.route("/myset/<int:my_set_id>/add_myset/<int:travel_id>", methods=["POST"])
+@login_required
+def add_myset_to_travel(my_set_id, travel_id):
+
+    items = MySetItem.query.filter_by(my_set_id=my_set_id).all()
+
+    existing_item_ids = {
+        (ti.item_id, ti.custom_item_id)
+        for ti in TravelItem.query.filter_by(travel_id=travel_id).all()
+    }
+
+    # TravelItem にコピーして追加
+    for ms_item in items:
+        key = (ms_item.item_id, ms_item.custom_item_id)
+        if key in existing_item_ids:
+            continue  # 同じアイテムならスキップ
+
+        new_ti = TravelItem(
+            travel_id=travel_id,
+            item_id=ms_item.item_id,
+            custom_item_id=ms_item.custom_item_id,
+            quantity=1  # 数量は1で初期化（あとでユーザーが調整）
+        )
+        db.session.add(new_ti)
+
+    db.session.commit()
+
+    flash("マイセットを持ち物リストに追加しました")
+    return redirect(url_for("main.items", travel_id=travel_id))
+
 @main_bp.route("/myset/<int:my_set_id>/delete", methods=["POST"])
 @login_required
 def delete_myset(my_set_id):
