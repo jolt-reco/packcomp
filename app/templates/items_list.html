@@ -73,7 +73,7 @@
     });
 
     document.getElementById("register-myset-btn").addEventListener("click", () => {
-        const selectedIds = Array.from(document.querySelectorAll(".select-for-myset:checked")).map(input => input.value);
+        const selectedIds = [...document.querySelectorAll(".select-for-myset:checked")].map(input => input.value);
 
         if(selectedIds.length === 0){
             alert("アイテムを選択してください");
