@@ -61,6 +61,8 @@ label{
     background-color: #3B5570;
     display: inline-block;
     margin: 0 auto 30px;
+    width: 200px;
+    height: 40px;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -236,6 +238,12 @@ label{
   font-weight: bold;
 }
 
+.button-display {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
 /* ====== 目的選択画面用 ====== */
 .purpose-section h3 {
   margin-top: 24px;
@@ -291,13 +299,79 @@ label{
 }
 
 /* ====== 持ち物リスト画面用 ====== */
-.item-card {
-  display: flex;
+
+.items-grid {
+    max-width: 1000px;   /* 最大幅 */
+    margin: 0 auto;       /* 左右中央寄せ */
+    padding: 100px;        /* 画面端との余白 */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;            /* カテゴリ間の余白 */
 }
 
-#down, #up {
-  font-size: 25px;
-  padding: 0 14px;
-  cursor: pointer;
-  user-select: none;
+/* カテゴリごとのカードコンテナは縦に積む */
+.item-container {
+  display: flex;
+  flex-direction: column; /* 縦積み */
+  gap: 10px; /* カード間の余白 */
+}
+
+/* カード本体 */
+.item-card {
+  display: flex;          /* カード内を横並び */
+  align-items: center;    /* 高さを揃える */
+  gap: 15px;              /* 要素間の横余白 */
+  padding: 10px;
+  background-color: #fff;          /* 白背景 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* ふわっとした影 */
+  transition: transform 0.2s, box-shadow 0.2s; /* ホバーで演出 */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* アイテム名 */
+.item-name {
+  flex: 1; /* 伸ばして中央揃えなど調整可能 */
+  font-weight: 500;
+  color: #333;
+}
+
+/* 数量操作 */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.down, .up {
+    cursor: pointer;
+    padding: 2px 6px;
+    background-color: #eee;
+    border-radius: 4px;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.down:hover, .up:hover {
+    background-color: #ddd;
+}
+
+/* 削除ボタンも軽く丸みをつける */
+.delete-btn {
+    padding: 4px 8px;
+    border: none;
+    background-color: #f56565;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+    background-color: #e53e3e;
 }
