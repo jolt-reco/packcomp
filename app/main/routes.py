@@ -527,3 +527,74 @@ def delete_myset_item(my_set_id, ms_item_id):
     db.session.commit()
     flash("削除しました")
     return redirect(url_for("main.edit_myset", my_set_id=my_set_id))
+
+@main_bp.route("/myset/<int:travel_id>/add_items/<int:my_set_id>")
+@login_required
+def add_items_to_myset(travel_id, my_set_id):
+
+    myset = MySet.query.filter_by(id=my_set_id, user_id=current_user.id).first_or_404()
+
+    display_items = []
+    display_custom_items = []
+
+    # Item → 辞書へ
+    for item in Item.query.all():
+        display_items.append({
+            "id": item.id,
+            "name": item.name,
+            "category": item.category
+        })
+
+    display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
+
+    # CustomItem → 辞書へ
+    for ci in CustomItem.query.filter_by(user_id=current_user.id).all():
+        display_custom_items.append({
+            "id": ci.id,
+            "name": ci.name,
+            "category": ci.category
+        })
+
+    display_custom_items = sorted(display_custom_items, key=lambda x: (x["category"], x["name"]))
+
+    items_category = {}
+    custom_items_category = {}
+    for di in display_items:
+        cat = di["category"]
+        items_category.setdefault(cat, []).append(di)
+
+    for dci in display_custom_items:
+        cat = dci["category"]
+        custom_items_category.setdefault(cat, []).append(dci)
+
+    return render_template(
+        "add_items_to_myset.html",
+        myset=myset,
+        items_category=items_category,
+        custom_items_category=custom_items_category,
+        travel_id=travel_id
+    )
+
+@main_bp.route("/myset/<int:travel_id>/add_items/<int:my_set_id>", methods=["POST"])
+@login_required
+def add_items_to_myset_post(travel_id, my_set_id):
+    data = request.get_json()
+    item_ids = data.get("item_ids", [])
+    custom_ids = data.get("custom_ids", [])
+
+    # 標準アイテム追加
+    for item_id in item_ids:
+        db.session.add(MySetItem(my_set_id=my_set_id, item_id=item_id))
+
+    # カスタムアイテム追加
+    for ci_id in custom_ids:
+        db.session.add(MySetItem(my_set_id=my_set_id, custom_item_id=ci_id))
+
+    db.session.commit()
+
+    # 追加後、編集画面へ飛ばす
+    return redirect(url_for(
+        "main.edit_myset",
+        my_set_id=my_set_id,
+        travel_id=travel_id
+    ))
