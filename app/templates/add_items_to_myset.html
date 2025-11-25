@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}マイセットにアイテム追加{% endblock %}
+
+{% block content %}
+<h2>{{ myset.name }} にアイテム追加</h2>
+
+<div class="tabs">
+  <button class="tab-btn" data-tab="items">標準アイテム</button>
+  <button class="tab-btn" data-tab="custom">カスタムアイテム</button>
+</div>
+
+<div id="items" class="tab-content">
+  {% for category, items in items_category.items() %}
+    <h4>{{ category }}</h4>
+    {% for item in items %}
+      <div>
+        <input type="checkbox" name="item_ids" value="{{ item.id }}"> {{ item.name }}
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>
+
+<div id="custom" class="tab-content" style="display:none;">
+  {% for category, cis in custom_items_category.items() %}
+    <h4>{{ category }}</h4>
+    {% for ci in cis %}
+      <div>
+        <input type="checkbox" name="custom_ids" value="{{ ci.id }}"> {{ ci.name }}
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>
+
+<button id="add-btn">マイセットに追加</button>
+
+<a href="{{ url_for('main.edit_myset', my_set_id=myset.id, travel_id=travel_id) }}">戻る</a>
+
+<script>
+// --- タブ切り替え ---
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.tab;
+
+    document.querySelectorAll(".tab-content").forEach(tc => tc.style.display = "none");
+    document.getElementById(target).style.display = "block";
+  });
+});
+
+// --- 追加ボタン ---
+document.getElementById("add-btn").addEventListener("click", () => {
+  const itemIds = [...document.querySelectorAll("input[name='item_ids']:checked")].map(input => input.value);
+  const customIds = [...document.querySelectorAll("input[name='custom_ids']:checked")].map(input => input.value);
+
+  fetch("{{ url_for('main.add_items_to_myset_post', my_set_id=myset.id, travel_id=travel_id) }}", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      item_ids: itemIds,
+      custom_ids: customIds
+    })
+  })
+  .then(res => {
+    // Flask が redirect() を返してきた場合、
+    // fetch では自動で追従しないので、最終URLを自分で取り出す必要がある
+    const redirectURL = "{{ url_for('main.edit_myset', my_set_id=myset.id, travel_id=travel_id) }}"
+    window.location.href = redirectURL;
+  });
+});
+</script>
+
+{% endblock %}
