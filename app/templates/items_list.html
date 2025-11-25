@@ -6,22 +6,27 @@
 <h2>{{ travel.title }}（{{ travel.destination }}）の持ち物リスト</h2>
 
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
-
-    <ul>
+    <div class="items-grid">
         {% for category, items in items_category.items() %}
             <h3>{{ category }}</h3>
+            <div class="item-container">
                 {% for ti in items %}
-                <div class="item-row" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
+                    <div class="item-card" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
                         <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
-                        {{ ti.name }}
-                        <div class="down">-</div>
-                        <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
-                        <div class="up">+</div>
+                        <div class="item-name">{{ ti.name }}</div>
+
+                        <div class="qty-control">
+                            <div class="down">-</div>
+                            <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
+                            <div class="up">+</div>
+                        </div>
+                        
                         <button type="button" class="delete-btn">削除</button>
-                </div>
+                    </div>
                 {% endfor %}
+            </div>    
         {% endfor %}
-    </ul>
+    </div>
     <button type="submit">数量を更新</button>
 </form>
 
@@ -38,7 +43,7 @@
 
 
 <script>
-    document.querySelectorAll(".item-row").forEach(row => {
+    document.querySelectorAll(".item-card").forEach(row => {
         const down = row.querySelector(".down");
         const up = row.querySelector(".up");
         const qty = row.querySelector(".qty");
