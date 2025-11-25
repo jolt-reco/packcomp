@@ -22,6 +22,9 @@
     {% endfor %}
 </div>
 
+<a href="{{ url_for('main.add_items_to_myset', my_set_id=myset.id, travel_id=travel_id) }}">追加</a>
+
+
 <script>
     // 削除ボタン
     document.querySelectorAll(".myset-item").forEach(row => {
