@@ -20,6 +20,8 @@
 
 <br>
 <a href="{{ url_for('main.new_custom_item', travel_id=travel.id) }}">新規追加</a>
+<a href="{{ url_for('main.items', travel_id=travel.id) }}">← 持ち物リストへ戻る</a>
+
 
 <script>
     document.querySelectorAll(".custom-item-row").forEach(row => {
