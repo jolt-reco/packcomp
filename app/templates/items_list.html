@@ -42,6 +42,8 @@
     <button type="submit">リストを再生成</button>
 </form>
 
+<div id="overlay" class="overlay hidden"></div>
+
 
 <script>
     document.querySelectorAll(".item-card").forEach(row => {
@@ -83,14 +85,16 @@
     const modeBtn = document.getElementById("register-myset-mode");
     const submitBtn = document.getElementById("submit-myset-btn");
     const cards = document.querySelectorAll(".item-card");
+    const overlay = document.getElementById("overlay");
 
     modeBtn.addEventListener("click", () => {
         mysetMode = !mysetMode
-        alert("アイテムをタップして選択してください");
         modeBtn.classList.toggle("mode-on", mysetMode);
         modeBtn.classList.toggle("mode-off", !mysetMode);
 
         submitBtn.classList.toggle("hidden", !mysetMode);
+
+        overlay.classList.toggle("hidden", !mysetMode);
 
         // カード見た目切り替え
         cards.forEach(card => {
