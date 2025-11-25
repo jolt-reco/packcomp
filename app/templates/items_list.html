@@ -20,7 +20,7 @@
                             <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
                             <div class="up">+</div>
                         </div>
-                        
+
                         <button type="button" class="delete-btn">削除</button>
                     </div>
                 {% endfor %}
@@ -30,7 +30,8 @@
     <button type="submit">数量を更新</button>
 </form>
 
-<button type="button" id="register-myset-btn">マイセットに登録</button>
+<button type="button" id="register-myset-mode" class="mode-off">マイセットに登録</button>
+<button type="button" id="submit-myset-btn" class="hidden">選択したアイテムを登録</button>
 
 <a href="{{ url_for('main.travels_list') }}">戻る</a>
 <a href="{{ url_for('main.custom_items_list', travel_id=travel.id) }}">アイテムを追加</a>
@@ -77,7 +78,45 @@
         })
     });
 
-    document.getElementById("register-myset-btn").addEventListener("click", () => {
+
+    let mysetMode = false;
+    const modeBtn = document.getElementById("register-myset-mode");
+    const submitBtn = document.getElementById("submit-myset-btn");
+    const cards = document.querySelectorAll(".item-card");
+
+    modeBtn.addEventListener("click", () => {
+        mysetMode = !mysetMode
+        alert("アイテムをタップして選択してください");
+        modeBtn.classList.toggle("mode-on", mysetMode);
+        modeBtn.classList.toggle("mode-off", !mysetMode);
+
+        submitBtn.classList.toggle("hidden", !mysetMode);
+
+        // カード見た目切り替え
+        cards.forEach(card => {
+            card.classList.toggle("mode-on", mysetMode);
+
+            // OFFになったら選択解除
+            if (!mysetMode) {
+                card.classList.remove("selected");
+                card.querySelector(".select-for-myset").checked = false;
+            }
+        });
+    });
+
+    // ▼ カードクリックで選択トグル
+    cards.forEach(card => {
+        card.addEventListener("click", () => {
+            if (!mysetMode) return;
+            card.classList.toggle("selected");
+
+            // 対応するチェックボックスも更新
+            const checkbox = card.querySelector(".select-for-myset");
+            checkbox.checked = card.classList.contains("selected");
+        });
+    });
+
+    submitBtn.addEventListener("click", () => {
         const selectedIds = [...document.querySelectorAll(".select-for-myset:checked")].map(input => input.value);
 
         if(selectedIds.length === 0){
@@ -103,7 +142,7 @@
             if(res.ok){
                 alert("マイセットに登録しました");
                 // チェックをリセット
-                document.querySelectorAll(".select-for-myset:checked").forEach(cb => cb.checked = false);
+                location.reload();
             } else {
                 alert("登録に失敗しました");
             }
