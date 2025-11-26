@@ -11,15 +11,11 @@
             <h1><a href="{{ url_for('main.top')}}">Pack Comp</a></h1>
         </header>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <ul class="flash-messages">
-                {% for msg in messages %}
-                <li>{{ msg }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-        {% endwith %}
+        <ul class="flash-messages">
+            {% for category, message in get_flashed_messages(with_categories=True) %}
+                <li class="flash-{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
 
         <main>
             {% block content %}{% endblock %}
