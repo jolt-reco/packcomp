@@ -298,6 +298,8 @@ def reset_items(travel_id):
 def select_purpose(travel_id):
     travel = Travel.query.get_or_404(travel_id)
 
+    pre_selected_purposes = [tp.purpose_id for tp in travel.travel_purposes]
+
     if request.method == "POST":
         selected = request.form.get("purposes", "")
         purpose_ids = [int(x) for x in selected.split(',') if x]
@@ -315,7 +317,12 @@ def select_purpose(travel_id):
         category: list(purposes_in_cat) 
         for category, purposes_in_cat in groupby(purposes, key=lambda x: x.category)
         }
-    return render_template("select_purpose.html", grouped_purposes=grouped_purposes, travel=travel)
+    return render_template(
+        "select_purpose.html", 
+        grouped_purposes=grouped_purposes, 
+        travel=travel,
+        pre_selected_purposes=pre_selected_purposes
+    )
 
 @main_bp.route("/custom_item/<int:travel_id>", methods=["GET", "POST"])
 @login_required
