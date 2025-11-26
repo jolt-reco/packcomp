@@ -1,20 +1,33 @@
 /* ====== ベース ====== */
+html {
+    height: 100%;
+}
+
 body {
+    height: 100%; /* ページ全体を100%に */
     font-family: 'Noto Sans JP', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #F2E8CF;
     color: #333;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* mainが余白を吸収 */
 }
 
 header a{
-    color:#38609A;
+    color:#226F54;
     font-size:16px;
 }
 
 h1, h2, h3 {
     color: #222;
     text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 a {
@@ -42,13 +55,58 @@ label{
 
 .hidden { display: none; }
 
+/* フッター全体 */
+footer {
+    background-color: #386641;       /* PackCompブルー */
+    color: #fff;
+    text-align: center;
+    padding: 15px 5%;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;    /* padding込みで幅を正確に */
+}
+
+footer p {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+}
+
+footer .footer-links {
+    font-size: 0.85rem;
+}
+
+footer .footer-links a {
+    color: #fff;                     /* アクセントカラー */
+    margin: 0 5px;
+    transition: 0.2s ease;
+}
+
+footer .footer-links a:hover {
+    text-decoration: underline; /* ホバー時に下線 */
+    opacity: 0.8;              /* 少し透け感で変化 */
+}
+
+/* 小さい画面でも中央に収まる */
+@media (max-width: 600px) {
+    footer p {
+        font-size: 0.8rem;
+    }
+    footer .footer-links {
+        font-size: 0.75rem;
+    }
+}
+
+
 /* ====== ボタン共通 ====== */
 .button-area1, .button-area2 {
     text-align: center; /* 子のaタグを中央寄せ */
 }
 
 .button-area1 a, .button-area1 button{
-    background-color: #65C1EFE8;
+    background-color: #6A994E;
     display: inline-block;
     margin: 0 auto 30px;
     color: white;
@@ -57,7 +115,24 @@ label{
     border-radius: 5px; 
     font-size: 16px;
     cursor: pointer;
+    /* ここからオシャレ強化 */
+    box-shadow: 0 4px 12px rgba(100, 165, 240, 0.4);
+    transition: 0.2s ease;
+    font-weight: 600;
 }
+.button-area1 a:hover,
+.button-area1 button:hover {
+    background-color: #A7C957;  /* 元の青より少し濃い色 */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(100, 165, 240, 0.55);
+    opacity: 0.95;
+}
+.button-area1 a:active,
+.button-area1 button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(100, 165, 240, 0.3);
+}
+
 
 .button-area2 a, .button-area2 button{
     background-color: #3B5570;
@@ -98,6 +173,32 @@ label{
 }
 
 /* ====== トップページ用 ====== */
+
+.top-text {
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.top-text h1 {
+    font-size: 2rem;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.top-text h2 {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+/* 全体の余白調整 */
+.welcome-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
 .illustration img {
     display: block;
     margin: 0 auto 50px;
