@@ -27,10 +27,10 @@
             <label><input type="checkbox" name="transport" value="bus"> バス</label>
         </div>
     </div>
-
-    <div class="button-area2">
+    
+    <div class="button-area1">
         <button type="submit">目的選択へ</button>
+        <a href="{{ url_for('main.travels_list') }}">戻る</a>
     </div>
 </form>
-
 {% endblock %}
