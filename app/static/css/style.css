@@ -21,6 +21,23 @@ main {
 header a{
     color:#226F54;
     font-size:16px;
+    text-decoration: none;
+}
+
+header a.logout-btn {
+    color: white;
+    position: absolute;
+    top: 10px;    /* ヘッダー内の上端からの距離 */
+    right: 20px;  /* 右端からの距離 */
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    background-color: #6A994E;
+    transition: background-color 0.2s;
+}
+
+header a.logout-btn:hover {
+    background-color: #A7C957;
 }
 
 h1, h2, h3 {
@@ -28,11 +45,6 @@ h1, h2, h3 {
     text-align: center;
     margin-top: 0px;
     margin-bottom: 10px;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
 }
 
 label{
@@ -141,6 +153,7 @@ footer .footer-links a:hover {
 .button-area1 a, .button-area1 button{
     background-color: #6A994E;
     display: inline-block;
+    text-decoration: none;
     margin: 0 auto 30px;
     color: white;
     border: none;
@@ -149,7 +162,7 @@ footer .footer-links a:hover {
     font-size: 16px;
     cursor: pointer;
     /* ここからオシャレ強化 */
-    box-shadow: 0 4px 12px rgba(100, 165, 240, 0.4);
+    box-shadow: 0 4px 12px rgba(52, 135, 70, 0.4);
     transition: 0.2s ease;
     font-weight: 600;
 }
@@ -157,7 +170,7 @@ footer .footer-links a:hover {
 .button-area1 button:hover {
     background-color: #A7C957;  /* 元の青より少し濃い色 */
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(100, 165, 240, 0.55);
+    box-shadow: 0 6px 16px rgba(157, 245, 146, 0.55);
     opacity: 0.95;
 }
 .button-area1 a:active,
@@ -281,7 +294,8 @@ footer .footer-links a:hover {
 }
 
 .travel_card {
-  background: #65C1EF;
+  position: relative;      /* card-link用 */
+  background: #F4A259;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 24px;
@@ -290,9 +304,57 @@ footer .footer-links a:hover {
   cursor: pointer;
 }
 
+.travel_card:hover {
+    background-color: #f2a867;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(232, 185, 98, 0.55);
+    opacity: 0.95;
+}
+
+/* カード全体をリンクにする */
+.travel_card .card-link {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+}
+
+/* 削除ボタンはリンクの上に出す */
+.travel_card form {
+    position: relative;
+    z-index: 2;
+}
+
+/* カード内テキストもリンクの下に出す */
 .travel_card h3, .travel_card p, .travel_card a {
+    position: relative;
+    z-index: 2;
     color: white;
 }
+
+/* 削除アイコンボタン */
+.delete-travel-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border: none;
+    background: none;
+    border: none;
+    padding: 8px;       /* アイコン周りに透明パディング */
+    cursor: pointer;
+    z-index: 5;
+}
+
+.delete-travel-btn i {
+    font-size: 10px;
+    color: #999;
+    pointer-events: auto;
+    transition: 0.25s ease;
+}
+
+.delete-travel-btn:hover {
+    transform: scale(1.1); /* ほんのり拡大 */
+}
+
 
 /* ====== 旅行登録画面用 ====== */
 .newtravel-container {
