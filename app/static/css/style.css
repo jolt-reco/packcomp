@@ -291,9 +291,10 @@ footer .footer-links a:hover {
 /* ====== 旅行一覧画面用 ====== */
 .travel_container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, 435px);
   gap: 20px;
   padding: 30px;
+  justify-content: center; /* 画面中央寄せ */
 }
 
 .travel_card {
