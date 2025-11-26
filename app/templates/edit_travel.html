@@ -28,7 +28,7 @@
     </div>
 
     <div class="button-area1">
-        <button type="submit" class="btn">更新</button>
+        <a href="{{ url_for('main.select_purpose', travel_id=travel.id) }}" class="btn">目的を編集</a>
         <a href="{{ url_for('main.travels_list') }}" class="btn">戻る</a>
     </div>
 </form>
