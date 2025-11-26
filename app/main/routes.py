@@ -75,7 +75,7 @@ def new_travel():
             male_count = int(request.form.get("male_count") or 0)
             female_count = int(request.form.get("female_count") or 0)
             child_count = int(request.form.get("child_count") or 0)
-            transport = request.form.get("transport", "")
+            transport = request.form.getlist("transport", "")
 
             new_travel = Travel(
                 user_id=current_user.id,
@@ -112,9 +112,13 @@ def edit_travel(travel_id):
     if request.method == "POST":
         # フォームから更新
         travel.title = request.form["title"]
-        travel.departure_date = request.form["departure_date"]
-        travel.return_date = request.form["return_date"]
-        # 必要ならほかの項目も追加
+        travel.departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
+        travel.return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
+        travel.male_count = int(request.form.get("male_count") or 0)
+        travel.female_count = int(request.form.get("female_count") or 0)
+        travel.child_count = int(request.form.get("child_count") or 0)
+        travel.transport = request.form.getlist("transport", "")
+
         db.session.commit()
         flash("旅行情報を更新しました。", "success")
         return redirect(url_for("main.travels_list"))
