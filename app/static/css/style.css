@@ -161,6 +161,9 @@ footer .footer-links a:hover {
     border-radius: 5px; 
     font-size: 16px;
     cursor: pointer;
+    line-height: 1; /* これ重要！ボタンの高さをaと揃える */
+    vertical-align: middle;     /* 要素の縦位置を揃える */
+    box-sizing: border-box;     /* paddingを含めた高さ幅にする */
     /* ここからオシャレ強化 */
     box-shadow: 0 4px 12px rgba(52, 135, 70, 0.4);
     transition: 0.2s ease;
@@ -438,8 +441,8 @@ footer .footer-links a:hover {
 
 .transport-options input[type="checkbox"]:checked + label,
 .transport-options label:has(input[type="checkbox"]:checked) {
-  background-color: #65c1ef;
-  border-color: #65c1ef;
+  background-color: #A7C957;
+  border-color: #A7C957;
   color: white;
   font-weight: bold;
 }
