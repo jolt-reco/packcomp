@@ -100,6 +100,29 @@ def new_travel():
 
     return render_template("new_travel.html")
 
+@main_bp.route("/travel/<int:travel_id>/edit", methods=["GET", "POST"])
+def edit_travel(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+
+    # 他のユーザーの編集を防ぐ
+    if travel.user_id != current_user.id:
+        flash("この旅行情報を編集する権限がありません。", "error")
+        return redirect(url_for("main.travels_list"))
+
+    if request.method == "POST":
+        # フォームから更新
+        travel.title = request.form["title"]
+        travel.departure_date = request.form["departure_date"]
+        travel.return_date = request.form["return_date"]
+        # 必要ならほかの項目も追加
+        db.session.commit()
+        flash("旅行情報を更新しました。", "success")
+        return redirect(url_for("main.travels_list"))
+
+    # GETの場合はフォームに既存データを渡す
+    return render_template("edit_travel.html", travel=travel)
+
+
 @main_bp.route("/list/<int:travel_id>", methods=["GET", "POST"])
 def items(travel_id):
     travel = Travel.query.get_or_404(travel_id)
