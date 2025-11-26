@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}旅行入力フォーム{% endblock %}
+
+{% block content %}
+<h2>旅行を登録</h2>
+<form method="post" action="{{ url_for('main.edit_travel', travel_id=travel.id) }}">
+    <div class="newtravel-container">    
+        <label>旅行タイトル <br><input type="text" name="title" value="{{ travel.title }}"></label><br>
+        <label>目的地 <br><input type="text" name="destination" value="{{ travel.destination }}"></label><br>
+        <label>出発日 <br><input type="date" name="departure_date" value="{{ travel.departure_date }}"></label><br>
+        <label>帰着日 <br><input type="date" name="return_date" value="{{ travel.return_date }}"></label><br>
+    </div>
+
+    <div class="newtravel-block">
+        <label>男性 <input type="number" name="male_count" min="0" value="{{ travel.male_count }}"><span>人</span></label><br>
+        <label>女性 <input type="number" name="female_count" min="0" value="{{ travel.female_count }}"><span>人</span></label><br>
+        <label>子供 <input type="number" name="child_count" min="0" value="{{ travel.child_count }}"><span>人</span></label><br>    
+    </div>
+
+    <div class="newtravel-block">
+        <p>交通手段を選択<br></p>
+        <div class="transport-options">
+            <label><input type="checkbox" name="transport" value="car" {% if 'car' in travel.transport %}checked{% endif %}> 車</label>
+            <label><input type="checkbox" name="transport" value="train" {% if 'train' in travel.transport %}checked{% endif %}> 電車</label>
+            <label><input type="checkbox" name="transport" value="plane" {% if 'plane' in travel.transport %}checked{% endif %}> 飛行機</label>
+            <label><input type="checkbox" name="transport" value="bus" {% if 'bus' in travel.transport %}checked{% endif %}> バス</label>        </div>
+    </div>
+
+    <div class="button-area1">
+        <button type="submit" class="btn">更新</button>
+        <a href="{{ url_for('main.travels_list') }}" class="btn">戻る</a>
+    </div>
+</form>
+{% endblock %}
