@@ -5,6 +5,12 @@
 {% block content %}
 <h2>{{ travel.title }}（{{ travel.destination }}）の持ち物リスト</h2>
 
+<!-- 進捗ゲージ -->
+<div id="progress-bar">
+    <div id="progress-fill" style="width:0%"></div>
+</div>
+<p id="progress-text">0%</p>
+
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
     <div class="items-grid">
         {% for category, items in items_category.items() %}
@@ -13,6 +19,9 @@
                 {% for ti in items %}
                     <div class="item-card" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
                         <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
+                        <div class="progress-control">
+                            <input type="checkbox" class="progress-checkbox" {% if ti.checked %}checked{% endif %}>
+                        </div>
                         <div class="item-name">{{ ti.name }}</div>
 
                         <div class="qty-control">
@@ -46,6 +55,23 @@
 
 
 <script>
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll(".progress-checkbox");
+        const total = checkboxes.length;
+        const checked = [...checkboxes].filter(cb => cb.checked).length;
+        const percent = Number((checked / total * 100).toPrecision(2));
+        document.getElementById("progress-fill").style.width = percent + "%";
+        document.getElementById("progress-text").textContent = percent + "%";
+    }
+
+    // 初期読み込み時に進捗反映
+    updateProgress();
+
+    // チェックボックス変更時
+    document.querySelectorAll(".progress-checkbox").forEach(cb => {
+        cb.addEventListener("change", updateProgress);
+    });
+
     document.querySelectorAll(".item-card").forEach(row => {
         const down = row.querySelector(".down");
         const up = row.querySelector(".up");
