@@ -6,7 +6,7 @@ html {
 body {
     height: 100%; /* ページ全体を100%に */
     font-family: 'Noto Sans JP', sans-serif;
-    background-color: #F2E8CF;
+    background-color: #f2eddf;
     color: #333;
     margin: 0;
     padding: 0;
@@ -40,17 +40,50 @@ label{
 }
 
 .flash-messages {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
+    width: 90%;       /* 親枠の幅 */
+    max-width: 600px; /* 任意の最大幅 */
+    margin: 0 auto 12px; /* 中央寄せ + 下マージン */
+    padding: 0;
+    list-style: none;
 }
+
 .flash-messages li {
-  background-color: #e9ffe9;
-  border: 1px solid #78c478;
-  color: #2b662b;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-bottom: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-weight: 500;
+    box-sizing: border-box;
+    max-width: 600px;  /* 最大幅 */
+    width: 90%;        /* 画面幅の90% */
+    margin-left: auto;  /* 中央寄せ */
+    margin-right: auto;
+    white-space: nowrap;      /* 改行させず1行にする */
+}
+
+/* 成功メッセージ */
+.flash-success {
+    background-color: #c0e4c1;
+    border: 1px solid #226F54;               /* 濃い緑の境界線 */
+    color: #226F54;
+}
+
+/* 情報メッセージ */
+.flash-info {
+    background-color: #6fb9ab;
+    border: 1px solid #87C38F;
+    color: #226F54;
+}
+/* 警告メッセージ */
+.flash-warning {
+    background-color: #f6f2b8;
+    border: 1px solid #fcf37e;
+    color: #43291F;
+}
+/* エラーメッセージ */
+.flash-error {
+    background-color: #deb2b2;
+    border: 1px solid #C43F3F;
+    color: #C43F3F;
 }
 
 .hidden { display: none; }
@@ -167,9 +200,9 @@ footer .footer-links a:hover {
 }
 
 .tab-buttons button.active {
-    background-color: #38609A; /* アクティブタブの色 */
+    background-color: #f4a259; /* アクティブタブの色 */
     color: white;
-    border-color: #38609A;
+    border-color: #f4a259;
 }
 
 /* ====== トップページ用 ====== */
