@@ -14,10 +14,10 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
             login_user(user)
-            flash(f"ログインしました。ようこそ{user.user_name}さん！")
+            flash(f"ログインしました。ようこそ{user.user_name}さん！", "success")
             return redirect(url_for("main.travels_list"))
         else:
-            flash("メールアドレスまたはパスワードが正しくありません。")
+            flash("メールアドレスまたはパスワードが正しくありません。", "error")
 
     return render_template("auth/login.html")
 
@@ -32,7 +32,7 @@ def register():
         # 既にメールが登録されていないか確認
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash("このメールアドレスはすでに登録されています。")
+            flash("このメールアドレスはすでに登録されています。", "warning")
             return redirect(url_for("auth.login"))
 
         # 新規ユーザー作成
@@ -41,7 +41,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("登録が完了しました！ログインしてください。")
+        flash("登録が完了しました！ログインしてください。", "info")
         return redirect(url_for("auth.login"))
 
     return render_template("auth/login.html")
@@ -51,7 +51,7 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash("ログアウトしました。")
+    flash("ログアウトしました。", "success")
     return redirect(url_for("auth.login"))
 
 # ゲストログイン
@@ -64,5 +64,5 @@ def guest_login():
         db.session.add(guest)
         db.session.commit()
     login_user(guest)
-    flash("ログインしました。ようこそゲストさん！")
+    flash("ログインしました。ようこそゲストさん！", "success")
     return redirect(url_for("main.travels_list"))
