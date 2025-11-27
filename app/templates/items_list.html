@@ -14,25 +14,27 @@
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
     <div class="items-grid">
         {% for category, items in items_category.items() %}
-            <h3>{{ category }}</h3>
-            <div class="item-container">
-                {% for ti in items %}
-                    <div class="item-card" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
-                        <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
-                        <div class="progress-control">
-                            <input type="checkbox" class="progress-checkbox" {% if ti.checked %}checked{% endif %}>
-                        </div>
-                        <div class="item-name">{{ ti.name }}</div>
+            <div class="category-block">
+                <h3>{{ category }}</h3>
+                <div class="item-container">
+                    {% for ti in items %}
+                        <div class="item-card" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
+                            <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
+                            <div class="progress-control">
+                                <input type="checkbox" class="progress-checkbox" {% if ti.checked %}checked{% endif %}>
+                            </div>
+                            <div class="item-name">{{ ti.name }}</div>
 
-                        <div class="qty-control">
-                            <div class="down">-</div>
-                            <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
-                            <div class="up">+</div>
-                        </div>
+                            <div class="qty-control">
+                                <div class="down">-</div>
+                                <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
+                                <div class="up">+</div>
+                            </div>
 
-                        <button type="button" class="delete-btn">削除</button>
-                    </div>
-                {% endfor %}
+                            <button type="button" class="delete-btn">削除</button>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>    
         {% endfor %}
     </div>
@@ -97,7 +99,15 @@
         })
         .then(res => {
             if(res.ok) {
+                
+                const categoryBlock = row.closest(".category-block");
+
                 row.remove(); // 削除成功したらDOMから消す
+
+                if (categoryBlock &&
+                    categoryBlock.querySelectorAll(".item-card").length === 0) {
+                    categoryBlock.remove();
+                }
             } else {
                 alert("削除できませんでした");
             }
