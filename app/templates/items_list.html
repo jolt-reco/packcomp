@@ -6,10 +6,10 @@
 <h2>{{ travel.title }}（{{ travel.destination }}）の持ち物リスト</h2>
 
 <!-- 進捗ゲージ -->
+<p id="progress-text">0%</p>
 <div id="progress-bar">
     <div id="progress-fill" style="width:0%"></div>
 </div>
-<p id="progress-text">0%</p>
 
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
     <div class="items-grid">
