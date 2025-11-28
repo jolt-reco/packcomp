@@ -553,23 +553,74 @@ footer .footer-links a:hover {
     text-align: center;
 }
 
-
-/* モード切替ボタン */
-#register-myset-mode {
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    margin-top: 20px;
-    transition: 0.25s;
-    position: relative; 
-    z-index: 1001;
+.side-actions {
+    position: fixed;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 2000;
 }
 
-#register-myset-mode.mode-off {
-    background: #e0e0e0;
-    color: #333;
+/* button と a を共通で丸青に統一 */
+.side-actions > button,
+.side-actions > a {
+    width: 50px;
+    height: 50px;
+    background: #F4A259;          /* 青背景 */
+    border-radius: 50%;           /* 丸 */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    transition: background 0.2s;
+}
+
+/* ホバーでほんのり反応 */
+.side-actions > *:hover {
+    background: #f0c8a6;
+}
+
+/* ▼ ラベル（button も a も data-label で統一） */
+.side-actions > *::after {
+    content: attr(data-label);
+    position: absolute;
+    right: 55px;
+    padding: 6px 10px;
+    background: #ad723f;
+    color: #fff;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px);
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+/* ホバー時にラベル表示 */
+.side-actions > *:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* アイコン（lucide）調整 */
+.side-actions svg {
+    stroke: #fff;
+    width: 22px;
+    height: 22px;
 }
 
 #register-myset-mode.mode-on {
@@ -580,6 +631,14 @@ footer .footer-links a:hover {
 #submit-myset-btn {
     position: relative; 
     z-index: 1001;
+}
+
+.side-actions.mode-on > button {
+    z-index: 1002; /* オーバーレイより上に置く */
+}
+
+.side-actions > a {
+    z-index: 800; /* オーバーレイの下に置く */
 }
 
 
