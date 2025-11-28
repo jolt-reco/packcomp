@@ -41,13 +41,21 @@
     <button type="submit">数量を更新</button>
 </form>
 
-<button type="button" id="register-myset-mode" class="mode-off">マイセットに登録</button>
+<a href="{{ url_for('main.travels_list') }}">戻る</a>
+
 <button type="button" id="submit-myset-btn" class="hidden">選択したアイテムを登録</button>
 
-<a href="{{ url_for('main.travels_list') }}">戻る</a>
-<a href="{{ url_for('main.custom_items_list', travel_id=travel.id) }}">アイテムを追加</a>
-<a href="{{ url_for('main.mysets_list', travel_id=travel.id) }}">マイセットを表示</a>
-
+<div class="side-actions">
+    <button type="button" id="register-myset-mode" class="mode-off" data-label="マイセットに登録">
+        <i data-lucide="file-pen"></i>
+    </button>
+    <a href="{{ url_for('main.mysets_list', travel_id=travel.id) }}" data-label="マイセットを表示">
+        <i data-lucide="monitor"></i>
+    </a>
+    <a href="{{ url_for('main.custom_items_list', travel_id=travel.id) }}" data-label="アイテムを追加">
+        <i data-lucide="circle-plus"></i>
+    </a>
+</div>
 
 <form method="POST" action="{{ url_for('main.reset_items', travel_id=travel.id) }}">
     <button type="submit">リストを再生成</button>
@@ -120,6 +128,7 @@
     let mysetMode = false;
     const modeBtn = document.getElementById("register-myset-mode");
     const submitBtn = document.getElementById("submit-myset-btn");
+    const sideActions = document.querySelector(".side-actions");
     const cards = document.querySelectorAll(".item-card");
     const overlay = document.getElementById("overlay");
 
@@ -127,6 +136,7 @@
         mysetMode = !mysetMode
         modeBtn.classList.toggle("mode-on", mysetMode);
         modeBtn.classList.toggle("mode-off", !mysetMode);
+        sideActions.classList.toggle("mode-on"); // サイド全体にクラス追加
 
         submitBtn.classList.toggle("hidden", !mysetMode);
 
