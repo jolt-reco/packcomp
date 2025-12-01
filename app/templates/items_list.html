@@ -11,6 +11,17 @@
     <div id="progress-fill" style="width:0%"></div>
 </div>
 
+<!-- 天気情報表示 -->
+<div id="weather-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <h3>天気情報</h3>
+        <div id="weather-result"></div>
+
+        <button id="close-weather-modal" class="btn">閉じる</button>
+    </div>
+</div>
+
+
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
     <div class="items-grid">
         {% for category, items in items_category.items() %}
@@ -45,6 +56,8 @@
 
 <button type="button" id="submit-myset-btn" class="hidden">選択したアイテムを登録</button>
 
+<button id="get-weather-btn" class="btn btn-weather">天気を取得する</button>
+
 <div class="side-actions">
     <button type="button" id="register-myset-mode" class="mode-off" data-label="マイセットに登録">
         <i data-lucide="file-pen"></i>
@@ -65,6 +78,32 @@
 
 
 <script>
+    // 天気情報取得処理
+    document.getElementById("get-weather-btn").addEventListener("click", () => {
+        fetch(`/travel/{{ travel.id }}/weather`)
+            .then(res => res.json())
+            .then(data => {
+                const resultDiv = document.getElementById("weather-result");
+
+                // data は { "2025-11-30": "ClearのちRain", ... } の形
+                let html = "<ul>";
+                for (const [date, weather] of Object.entries(data)) {
+                    html += `<li><strong>${date}</strong>：${weather}</li>`;
+                }
+                html += "</ul>";
+
+                resultDiv.innerHTML = html;
+
+                // モーダル表示
+                document.getElementById("weather-modal").style.display = "flex";
+            });
+    });
+
+    // モーダル閉じる
+    document.getElementById("close-weather-modal").addEventListener("click", () => {
+            document.getElementById("weather-modal").style.display = "none";
+    });
+
     function updateProgress() {
         const checkboxes = document.querySelectorAll(".progress-checkbox");
         const total = checkboxes.length;
