@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.models import (
@@ -18,6 +18,7 @@ from sqlalchemy import and_, or_
 from itertools import groupby
 import os
 from werkzeug.utils import secure_filename
+from app.services.weather import get_summary_for_travel
 
 UPLOAD_FOLDER = "app/static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
@@ -126,6 +127,19 @@ def edit_travel(travel_id):
     # GETの場合はフォームに既存データを渡す
     return render_template("edit_travel.html", travel=travel)
 
+@main_bp.route("/travel/<int:travel_id>/weather")
+@login_required
+def get_weather(travel_id):
+
+    travel = Travel.query.get_or_404(travel_id)
+
+    summary_dict = get_summary_for_travel(
+        travel.destination,
+        travel.departure_date,
+        travel.return_date
+    )
+
+    return jsonify(summary_dict)
 
 @main_bp.route("/list/<int:travel_id>", methods=["GET", "POST"])
 def items(travel_id):
