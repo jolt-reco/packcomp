@@ -11,6 +11,23 @@
     <div id="progress-fill" style="width:0%"></div>
 </div>
 
+<!-- 天気情報 -->
+{% if daily_weather %}
+  <div class="weather-box">
+    {% for day in daily_weather %}
+      <div class="weather-card">
+        <p>{{ day.date }}</p>
+        <p><i data-lucide="{{ day.weather }}"></i></p>
+        <p>{{ day.temp_max }}℃ | {{ day.temp_min }}℃</p>
+        <p>{{ day.code }}</p>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>天気情報は取得されていません</p>
+{% endif %}
+
+
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
     <div class="items-grid">
         {% for category, items in items_category.items() %}
@@ -57,6 +74,15 @@
     </a>
 </div>
 
+<form method="POST" action="{{ url_for('main.travel_weather', travel_id=travel.id) }}">
+  <button type="submit" class="btn btn-primary">
+    天気情報を取得
+  </button>
+  {% if travel.weather_last_update %}
+    <small>最終取得: {{ travel.weather_last_update.strftime('%Y-%m-%d %H:%M') }}</small>
+  {% endif %}
+</form>
+
 <form method="POST" action="{{ url_for('main.reset_items', travel_id=travel.id) }}">
     <button type="submit">リストを再生成</button>
 </form>
@@ -65,6 +91,13 @@
 
 
 <script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+        if (window.lucide) {
+            lucide.replace();  // <i> を SVG に置換
+        }
+    });
+
     function updateProgress() {
         const checkboxes = document.querySelectorAll(".progress-checkbox");
         const total = checkboxes.length;
