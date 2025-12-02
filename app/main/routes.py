@@ -18,6 +18,8 @@ from sqlalchemy import and_, or_
 from itertools import groupby
 import os
 from werkzeug.utils import secure_filename
+from app.services.nominatim import geocode
+from app.services.openmeteo import get_daily_weather
 
 UPLOAD_FOLDER = "app/static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
@@ -126,6 +128,62 @@ def edit_travel(travel_id):
     # GETの場合はフォームに既存データを渡す
     return render_template("edit_travel.html", travel=travel)
 
+@main_bp.route("/travel/<int:travel_id>/weather", methods=["POST"])
+def travel_weather(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+
+    destination = travel.destination
+    departure_date = travel.departure_date
+    return_date = travel.return_date
+
+    lat, lon = geocode(destination)
+    if lat is None:
+        return "場所が見つかりませんでした"
+
+    daily_weather = get_daily_weather(lat, lon, departure_date, return_date)
+    
+    # ---------items_category生成のための重複コード-----------
+    travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
+
+    display_items = []
+    for disp_ti in travel_items:
+        if disp_ti.item:
+            name = disp_ti.item.name
+            category = disp_ti.item.category
+        elif disp_ti.custom_item:
+            name = disp_ti.custom_item.name
+            category = disp_ti.custom_item.category
+        else:
+            disp_mi=disp_ti.my_set_item
+            if disp_mi and disp_mi.item:
+                name = disp_mi.item.name
+                category = disp_mi.item.category
+            elif disp_mi and disp_mi.custom_item:
+                name = disp_mi.custom_item.name
+                category = disp_mi.custom_item.category
+            else:
+                name = "不明"
+                category = "その他"
+
+        display_items.append({
+            "id": disp_ti.id,
+            "name": name,
+            "category": category,
+            "quantity": disp_ti.quantity
+        })
+
+        display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
+
+
+    items_category = {}
+
+    for di in display_items:
+        cat = di["category"]
+        items_category.setdefault(cat, []).append(di)
+
+    # -----------------------------------------------------   
+
+    return render_template("items_list.html", travel=travel, items_category=items_category, daily_weather=daily_weather)
 
 @main_bp.route("/list/<int:travel_id>", methods=["GET", "POST"])
 def items(travel_id):
