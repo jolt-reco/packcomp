@@ -20,6 +20,7 @@ import os
 from werkzeug.utils import secure_filename
 from app.services.nominatim import geocode
 from app.services.openmeteo import get_daily_weather
+from app.data.destinations import DESTINATIONS
 
 UPLOAD_FOLDER = "app/static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
@@ -100,7 +101,7 @@ def new_travel():
             db.session.rollback()
             flash(f"登録に失敗しました: {e}", "error")             
 
-    return render_template("new_travel.html")
+    return render_template("new_travel.html", destinations=DESTINATIONS)
 
 @main_bp.route("/travel/<int:travel_id>/edit", methods=["GET", "POST"])
 def edit_travel(travel_id):
@@ -114,6 +115,7 @@ def edit_travel(travel_id):
     if request.method == "POST":
         # フォームから更新
         travel.title = request.form["title"]
+        travel.destination = request.form["destination"]
         travel.departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
         travel.return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
         travel.male_count = int(request.form.get("male_count") or 0)
@@ -128,7 +130,7 @@ def edit_travel(travel_id):
         return redirect(url_for("main.select_purpose", travel_id=travel_id))
 
     # GETの場合はフォームに既存データを渡す
-    return render_template("edit_travel.html", travel=travel)
+    return render_template("edit_travel.html", travel=travel, destinations=DESTINATIONS)
 
 @main_bp.route("/travel/<int:travel_id>/weather", methods=["POST"])
 def travel_weather(travel_id):
