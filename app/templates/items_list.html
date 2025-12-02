@@ -12,9 +12,9 @@
 </div>
 
 <!-- 天気情報 -->
-{% if daily_weather %}
+{% if travel.weather_data %}
   <div class="weather-box">
-    {% for day in daily_weather %}
+    {% for day in travel.weather_data %}
       <div class="weather-card">
         <p>{{ day.date }}</p>
         <p><i data-lucide="{{ day.weather }}"></i></p>
