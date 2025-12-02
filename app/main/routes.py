@@ -120,6 +120,8 @@ def edit_travel(travel_id):
         travel.female_count = int(request.form.get("female_count") or 0)
         travel.child_count = int(request.form.get("child_count") or 0)
         travel.transport = request.form.getlist("transport", "")
+        travel.weather_data = None
+        travel.weather_last_update = None
 
         db.session.commit()
         flash("旅行情報を更新しました。", "success")
