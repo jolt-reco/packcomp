@@ -24,11 +24,12 @@
             <label><input type="checkbox" name="transport" value="car" {% if 'car' in travel.transport %}checked{% endif %}> 車</label>
             <label><input type="checkbox" name="transport" value="train" {% if 'train' in travel.transport %}checked{% endif %}> 電車</label>
             <label><input type="checkbox" name="transport" value="plane" {% if 'plane' in travel.transport %}checked{% endif %}> 飛行機</label>
-            <label><input type="checkbox" name="transport" value="bus" {% if 'bus' in travel.transport %}checked{% endif %}> バス</label>        </div>
+            <label><input type="checkbox" name="transport" value="bus" {% if 'bus' in travel.transport %}checked{% endif %}> バス</label>
+        </div>
     </div>
 
     <div class="button-area1">
-        <a href="{{ url_for('main.select_purpose', travel_id=travel.id) }}" class="btn">目的を編集</a>
+        <button type="submit" class="btn">目的を編集</button>
         <a href="{{ url_for('main.travels_list') }}" class="btn">戻る</a>
     </div>
 </form>
