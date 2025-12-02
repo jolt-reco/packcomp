@@ -27,7 +27,6 @@ def get_daily_weather(lat, lon, departure_date, return_date):
             "weather": WEATHER_ICON.get(code, {"label": "不明", "icon": "Question"}),
             "temp_max": daily["temperature_2m_max"][i],
             "temp_min": daily["temperature_2m_min"][i],
-            "code": code
         })
 
     return result
