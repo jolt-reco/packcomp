@@ -1,9 +1,17 @@
 import requests
 from flask import current_app
+from datetime import date, timedelta
 from app.services.weather_icon import WEATHER_ICON
 
 def get_daily_weather(lat, lon, departure_date, return_date):
     url = current_app.config["OPENMETEO_URI"]
+
+    today = date.today()
+    max_day = today + timedelta(days=15)
+
+    # 16日以降ならリクエストせず空リスト返す
+    if departure_date > max_day:
+        return []
 
     params = {
         "latitude": lat,
