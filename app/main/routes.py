@@ -131,16 +131,18 @@ def edit_travel(travel_id):
 @main_bp.route("/travel/<int:travel_id>/weather", methods=["POST"])
 def travel_weather(travel_id):
     travel = Travel.query.get_or_404(travel_id)
+    
+    # 既存データチェック（16日以内かつ保存済みか）
+    if not travel.weather_data or travel.weather_last_update is None \
+        or (datetime.now() - travel.weather_last_update).days >= 1:
 
-    destination = travel.destination
-    departure_date = travel.departure_date
-    return_date = travel.return_date
+        lat, lon = geocode(travel.destination)
+        if lat is None:
+            flash("場所が見つかりませんでした")
 
-    lat, lon = geocode(destination)
-    if lat is None:
-        return "場所が見つかりませんでした"
-
-    daily_weather = get_daily_weather(lat, lon, departure_date, return_date)
+        travel.weather_data = get_daily_weather(lat, lon, travel.departure_date, travel.return_date)
+        travel.weather_last_update = datetime.now()
+        db.session.commit()
     
     # ---------items_category生成のための重複コード-----------
     travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
@@ -183,7 +185,7 @@ def travel_weather(travel_id):
 
     # -----------------------------------------------------   
 
-    return render_template("items_list.html", travel=travel, items_category=items_category, daily_weather=daily_weather)
+    return render_template("items_list.html", travel=travel, items_category=items_category, daily_weather=travel.weather_data)
 
 @main_bp.route("/list/<int:travel_id>", methods=["GET", "POST"])
 def items(travel_id):
