@@ -44,7 +44,7 @@ def contact():
 @main_bp.route("/travels")
 @login_required
 def travels_list():
-    travels = Travel.query.filter_by(user_id=current_user.id).all()
+    travels = Travel.query.filter_by(user_id=current_user.id).order_by(Travel.departure_date).all()
     return render_template("travels_list.html", travels=travels)
 
 @main_bp.route("/delete_travel/<int:travel_id>", methods=["GET", "POST"])
@@ -123,7 +123,7 @@ def edit_travel(travel_id):
 
         db.session.commit()
         flash("旅行情報を更新しました。", "success")
-        return redirect(url_for("main.travels_list"))
+        return redirect(url_for("main.select_purpose", travel_id=travel_id))
 
     # GETの場合はフォームに既存データを渡す
     return render_template("edit_travel.html", travel=travel)
@@ -237,37 +237,42 @@ def items(travel_id):
         or_(Item.max_days.is_(None), Item.max_days >= days)
     ).all()
 
+    # 差分更新処理
     existing_items = TravelItem.query.filter_by(travel_id=travel.id).all()
-    if not existing_items:
-        ini_items = purpose_items + general_items
-        for item in ini_items:
-            exists = TravelItem.query.filter_by(
-                travel_id=travel_id,
-                item_id=item.id
-            ).first()
-            if exists:
-                continue
+    existing_item_ids = {ti.item_id for ti in existing_items}
 
-            if item.for_gender == "male":
-                quantity = travel.male_count
-            elif item.for_gender == "female":
-                quantity = travel.female_count
-            elif item.for_gender == "child":
-                quantity = travel.child_count
-            else:
-                quantity = travel.male_count + travel.female_count + travel.child_count
+    new_item_ids = {item.id for item in purpose_items + general_items}
 
-            ini_ti = TravelItem(
-                my_set_item_id=None,
-                item_id=item.id,
-                custom_item_id=None,
-                travel_id=travel_id,
-                quantity=quantity,
-                note=None,
-                check_flag=False
-            )
-            db.session.add(ini_ti)
-        db.session.commit()
+    # 削除: 今のリストにないアイテムを削除
+    for ti in existing_items:
+        if ti.item_id not in new_item_ids:
+            db.session.delete(ti)
+
+    # 追加: 新規アイテムのみ追加
+    for item in purpose_items + general_items:
+        if item.id in existing_item_ids:
+            continue
+
+        if item.for_gender == "male":
+            quantity = travel.male_count
+        elif item.for_gender == "female":
+            quantity = travel.female_count
+        elif item.for_gender == "child":
+            quantity = travel.child_count
+        else:
+            quantity = travel.male_count + travel.female_count + travel.child_count
+
+        ini_ti = TravelItem(
+            my_set_item_id=None,
+            item_id=item.id,
+            custom_item_id=None,
+            travel_id=travel_id,
+            quantity=quantity,
+            note=None,
+            check_flag=False
+        )
+        db.session.add(ini_ti)
+    db.session.commit()
 
     travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
 
@@ -361,15 +366,21 @@ def select_purpose(travel_id):
     pre_selected_purposes = [tp.purpose_id for tp in travel.travel_purposes]
 
     if request.method == "POST":
-        selected = request.form.get("purposes", "")
-        purpose_ids = [int(x) for x in selected.split(',') if x]
+        selected = request.form.get("purposes")
+        new_ids = set(int(x) for x in selected.split(',') if x)
+        current_ids = set(pre_selected_purposes)
         
-        TravelPurpose.query.filter_by(travel_id=travel_id).delete()
+        for pid in current_ids - new_ids:
+            tp = TravelPurpose.query.filter_by(travel_id=travel_id, purpose_id=pid).first()
+            if tp:
+                db.session.delete(tp)
 
-        for pid in purpose_ids:
+        for pid in new_ids - current_ids:
             tp = TravelPurpose(travel_id=travel_id, purpose_id=pid)
-            db.session.add(tp)
+            db.session.add(tp)       
+
         db.session.commit()
+
         return redirect(url_for("main.items", travel_id=travel_id))
 
     purposes = Purpose.query.order_by(Purpose.category).all()

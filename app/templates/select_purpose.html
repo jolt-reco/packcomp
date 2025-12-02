@@ -47,6 +47,9 @@
       });
   });
 
+  // ページロード時に hidden に初期値をセット
+  input.value = Array.from(selected).join(',');
+
 </script>
 
 {% endblock %}
