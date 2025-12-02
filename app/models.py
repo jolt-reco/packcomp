@@ -37,6 +37,8 @@ class Travel(db.Model):
     female_count = db.Column(db.Integer, default=0)
     child_count = db.Column(db.Integer, default=0)
     transport = db.Column(db.String, nullable=True)
+    weather_data = db.Column(db.JSON, nullable=True)
+    weather_last_update = db.Column(db.DateTime, nullable=True)
     
     user = db.relationship("User", back_populates="travels")
     travel_items = db.relationship("TravelItem", back_populates="travel", cascade="all, delete-orphan")
