@@ -18,7 +18,6 @@ from sqlalchemy import and_, or_
 from itertools import groupby
 import os
 from werkzeug.utils import secure_filename
-from app.services.nominatim import geocode
 from app.services.openmeteo import get_daily_weather
 from app.data.destinations import DESTINATIONS
 
@@ -73,6 +72,8 @@ def new_travel():
         try:
             title = request.form["title"]
             destination = request.form["destination"]
+            lat = float(request.form.get("lat"))
+            lon = float(request.form.get("lon"))
             departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
             return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
             male_count = int(request.form.get("male_count") or 0)
@@ -84,6 +85,8 @@ def new_travel():
                 user_id=current_user.id,
                 title=title,
                 destination=destination,
+                latitude=lat,
+                longitude=lon,
                 departure_date=departure_date,
                 return_date=return_date,
                 male_count=male_count,
@@ -140,11 +143,7 @@ def travel_weather(travel_id):
     if not travel.weather_data or travel.weather_last_update is None \
         or (datetime.now() - travel.weather_last_update).days >= 1:
 
-        lat, lon = geocode(travel.destination)
-        if lat is None:
-            flash("場所が見つかりませんでした")
-
-        travel.weather_data = get_daily_weather(lat, lon, travel.departure_date, travel.return_date)
+        travel.weather_data = get_daily_weather(travel.latitude, travel.longitude, travel.departure_date, travel.return_date)
         travel.weather_last_update = datetime.now()
         db.session.commit()
     
