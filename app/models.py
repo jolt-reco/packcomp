@@ -31,6 +31,8 @@ class Travel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     title = db.Column(db.String, nullable=False)
     destination = db.Column(db.String, nullable=False)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
     departure_date = db.Column(db.Date, nullable=False)
     return_date = db.Column(db.Date, nullable=False)
     male_count = db.Column(db.Integer, default=1)
