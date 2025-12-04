@@ -7,16 +7,14 @@
 <form method="post" action="{{ url_for('main.new_travel') }}">
     <div class="newtravel-container">    
         <label>旅行タイトル <br><input type="text" name="title"></label><br>
-        <label>都道府県
-            <select id="prefecture">
-                {% for prefecture in destinations.keys() %}
-                    <option value="{{ prefecture }}">{{ prefecture }}</option>
-                {% endfor %}
-            </select>
-        </label><br>
-        <label>目的地
-            <select name="destination" id="city"></select>
-        </label><br>
+        <label>目的地 <br>
+            <input type="text" id="autocomplete" placeholder="地名を入力" required>
+
+            <!-- 緯度経度を送る hidden input -->
+            <input type="hidden" name="destination" id="destination">
+            <input type="hidden" name="lat" id="lat">
+            <input type="hidden" name="lon" id="lon">
+        </label>
         <label>出発日 <br><input type="date" name="departure_date"></label><br>
         <label>帰着日 <br><input type="date" name="return_date"></label><br>
     </div>
@@ -43,27 +41,49 @@
     </div>
 </form>
 
+<script
+src="https://maps.googleapis.com/maps/api/js?key={{ config.GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initAutocomplete"
+async defer>
+</script>
+
 <script>
-const destinations = {{ destinations|tojson }};
-const prefectureSelect = document.getElementById("prefecture");
-const citySelect = document.getElementById("city");
+    let autocomplete;
 
-function updateCities() {
-    const cities = destinations[prefectureSelect.value] || [];
-    citySelect.innerHTML = "";
-    cities.forEach(city => {
-        const opt = document.createElement("option");
-        opt.value = city;
-        opt.textContent = city;
-        citySelect.appendChild(opt);
-    });
-}
+    function initAutocomplete() {
+        const input = document.getElementById("autocomplete");
+        const destInput = document.getElementById("destination");
+        const latInput = document.getElementById("lat");
+        const lonInput = document.getElementById("lon");
 
-// 都道府県選択時に都市リスト更新
-prefectureSelect.addEventListener("change", updateCities);
+        autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['(cities)'],
+            componentRestrictions: { country: 'jp' }
+        });
 
-// 初期表示
-updateCities();
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // hiddenを空にしてsubmitできないようにする
+                destInput.value = "";
+                latInput.value = "";
+                lonInput.value = "";
+                return;
+            }
+
+            destInput.value = place.name;
+            latInput.value = place.geometry.location.lat();
+            lonInput.value = place.geometry.location.lng();
+        });
+    
+
+        document.querySelector("form").addEventListener("submit", function(e) {
+            if (!destInput.value || input.value !== destInput.value) {
+                e.preventDefault();
+                alert("必ずGoogleマップの候補から目的地を選択してください");
+            }
+        });
+    }
+
 </script>
 
 {% endblock %}
