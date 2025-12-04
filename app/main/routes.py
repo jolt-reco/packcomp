@@ -72,8 +72,8 @@ def new_travel():
         try:
             title = request.form["title"]
             destination = request.form["destination"]
-            lat = float(request.form.get("lat"))
-            lon = float(request.form.get("lon"))
+            lat = request.form.get("lat")
+            lon = request.form.get("lon")
             departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
             return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
             male_count = int(request.form.get("male_count") or 0)
@@ -116,21 +116,28 @@ def edit_travel(travel_id):
         return redirect(url_for("main.travels_list"))
 
     if request.method == "POST":
-        # フォームから更新
-        travel.title = request.form["title"]
-        travel.destination = request.form["destination"]
-        travel.departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
-        travel.return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
-        travel.male_count = int(request.form.get("male_count") or 0)
-        travel.female_count = int(request.form.get("female_count") or 0)
-        travel.child_count = int(request.form.get("child_count") or 0)
-        travel.transport = request.form.getlist("transport", "")
-        travel.weather_data = None
-        travel.weather_last_update = None
+        try:
+            # フォームから更新
+            travel.title = request.form["title"]
+            travel.destination = request.form["destination"]
+            travel.lattitude = request.form.get("lat")
+            travel.longitude = request.form.get("lon")
+            travel.departure_date = datetime.strptime(request.form["departure_date"], "%Y-%m-%d").date()
+            travel.return_date = datetime.strptime(request.form["return_date"], "%Y-%m-%d").date()
+            travel.male_count = int(request.form.get("male_count") or 0)
+            travel.female_count = int(request.form.get("female_count") or 0)
+            travel.child_count = int(request.form.get("child_count") or 0)
+            travel.transport = request.form.getlist("transport", "")
+            travel.weather_data = None
+            travel.weather_last_update = None
 
-        db.session.commit()
-        flash("旅行情報を更新しました。", "success")
-        return redirect(url_for("main.select_purpose", travel_id=travel_id))
+            db.session.commit()
+            flash("旅行情報を更新しました。", "success")
+            return redirect(url_for("main.select_purpose", travel_id=travel_id))
+        
+        except Exception as e:
+            db.session.rollback()
+            flash(f"更新に失敗しました: {e}", "error") 
 
     # GETの場合はフォームに既存データを渡す
     return render_template("edit_travel.html", travel=travel, destinations=DESTINATIONS)
