@@ -38,7 +38,7 @@ class Travel(db.Model):
     male_count = db.Column(db.Integer, default=1)
     female_count = db.Column(db.Integer, default=0)
     child_count = db.Column(db.Integer, default=0)
-    transport = db.Column(db.String, nullable=True)
+    transport = db.Column(db.JSON, nullable=True)
     weather_data = db.Column(db.JSON, nullable=True)
     weather_last_update = db.Column(db.DateTime, nullable=True)
     
@@ -90,9 +90,11 @@ class Item(db.Model):
     for_gender = db.Column(db.String, nullable=False, default="all")
     for_season = db.Column(db.String, nullable=False, default="all")
     for_weather = db.Column(db.String, default="all")
-    for_transport = db.Column(db.String, nullable=False, default="all")
+    for_transport = db.Column(db.JSON, nullable=False, default=list)
     min_days = db.Column(db.Integer, nullable=True)
     max_days = db.Column(db.Integer, nullable=True)
+    is_general = db.Column(db.Boolean, default=False)
+    fixed_quantity = db.Column(db.Integer, nullable=True)
 
     my_set_items = db.relationship("MySetItem", back_populates="item")
     travel_items = db.relationship("TravelItem", back_populates="item")
@@ -160,6 +162,7 @@ class TravelItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     note = db.Column(db.String, nullable=True)
     check_flag = db.Column(db.Boolean, nullable=False, default=False)
+    auto_added = db.Column(db.Boolean, default=False)
 
     travel = db.relationship("Travel", back_populates="travel_items")
     my_set_item = db.relationship("MySetItem", back_populates="travel_items")
