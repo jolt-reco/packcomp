@@ -1,7 +1,7 @@
 import requests
 from flask import current_app
 from datetime import date, timedelta
-from app.services.weather_icon import WEATHER_ICON
+from app.services.weather_icon import WEATHER_MAP
 
 def get_daily_weather(lat, lon, departure_date, return_date):
     url = current_app.config["OPENMETEO_URI"]
@@ -32,7 +32,7 @@ def get_daily_weather(lat, lon, departure_date, return_date):
 
         result.append({
             "date": daily["time"][i],
-            "weather": WEATHER_ICON.get(code, {"label": "不明", "icon": "Question"}),
+            "weather": WEATHER_MAP.get(code, {"type": "不明", "icon": "Question"}),
             "temp_max": daily["temperature_2m_max"][i],
             "temp_min": daily["temperature_2m_min"][i],
         })
