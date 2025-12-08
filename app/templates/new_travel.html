@@ -31,6 +31,7 @@
             <label><input type="checkbox" name="transport" value="car"> 車</label>
             <label><input type="checkbox" name="transport" value="train"> 電車</label>
             <label><input type="checkbox" name="transport" value="plane"> 飛行機</label>
+            <label><input type="checkbox" name="transport" value="ship"> 船</label>
             <label><input type="checkbox" name="transport" value="bus"> バス</label>
         </div>
     </div>
@@ -77,7 +78,7 @@ async defer>
     
 
         document.querySelector("form").addEventListener("submit", function(e) {
-            if (!destInput.value || input.value !== destInput.value) {
+            if (!latInput.value || !lonInput.value) {
                 e.preventDefault();
                 alert("必ずGoogleマップの候補から目的地を選択してください");
             }
