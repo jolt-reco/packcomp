@@ -17,9 +17,8 @@
     {% for day in travel.weather_data %}
       <div class="weather-card">
         <p>{{ day.date }}</p>
-        <p><i data-lucide="{{ day.weather }}"></i></p>
+        <p><i data-lucide="{{ day.weather.icon }}"></i></p>
         <p>{{ day.temp_max }}℃ | {{ day.temp_min }}℃</p>
-        <p>{{ day.code }}</p>
       </div>
     {% endfor %}
   </div>
@@ -27,32 +26,49 @@
   <p>天気情報は取得されていません</p>
 {% endif %}
 
+<!-- 天気アイテムモーダル -->
+<div id="weatherModal" class="modal-overlay hidden">
+    <div id="weatherModalBackdrop" class="modal-backdrop"></div>
+
+    <div class="modal-content">
+        <form method="POST" action="{{ url_for('main.auto_items_post', travel_id=travel.id) }}">
+            {% include "_candidate_items.html" %}
+            <div class="modal-buttons">
+                <button type="submit" class="btn btn-primary">追加する</button>
+                <button type="button" id="closeWeatherModal" class="btn">閉じる</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <form method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
     <div class="items-grid">
-        {% for category, items in items_category.items() %}
-            <div class="category-block">
-                <h3>{{ category }}</h3>
-                <div class="item-container">
-                    {% for ti in items %}
-                        <div class="item-card" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
-                            <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
-                            <div class="progress-control">
-                                <input type="checkbox" class="progress-checkbox" {% if ti.checked %}checked{% endif %}>
-                            </div>
-                            <div class="item-name">{{ ti.name }}</div>
+        {% for category in category_order %}
+            {% set items = items_category.get(category, []) %}
+            {% if items %}
+                <div class="category-block">
+                    <h3>{{ category }}</h3>
+                    <div class="item-container">
+                        {% for ti in items %}
+                            <div class="item-card" data-travel-id="{{ travel.id }}" data-item-id="{{ ti.id }}">
+                                <input type="checkbox" class="select-for-myset" value="{{ ti.id }}">
+                                <div class="progress-control">
+                                    <input type="checkbox" class="progress-checkbox" {% if ti.checked %}checked{% endif %}>
+                                </div>
+                                <div class="item-name">{{ ti.name }}</div>
 
-                            <div class="qty-control">
-                                <div class="down">-</div>
-                                <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
-                                <div class="up">+</div>
-                            </div>
+                                <div class="qty-control">
+                                    <div class="down">-</div>
+                                    <input type="number" class="qty" value="{{ ti.quantity }}" name="qty_{{ ti.id }}" min="1" required>
+                                    <div class="up">+</div>
+                                </div>
 
-                            <button type="button" class="delete-btn">削除</button>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>    
+                                <button type="button" class="delete-btn">削除</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div> 
+            {% endif %}   
         {% endfor %}
     </div>
     <button type="submit">数量を更新</button>
@@ -83,6 +99,11 @@
   {% endif %}
 </form>
 
+<!-- 天気アイテムモーダル表示ボタン -->
+<button id="openWeatherModal" class="btn btn-secondary">
+  天気に合ったアイテムを追加する
+</button>
+
 <form method="POST" action="{{ url_for('main.reset_items', travel_id=travel.id) }}">
     <button type="submit">リストを再生成</button>
 </form>
@@ -91,6 +112,41 @@
 
 
 <script>
+    // 天気情報取得→weather_itemsの処理順でモーダルを開く
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("weatherModal");
+        const openBtn = document.getElementById("openWeatherModal");
+        const closeBtn = document.getElementById("closeWeatherModal");
+        const backdrop = document.getElementById("weatherModalBackdrop");
+
+        // ボタンでモーダル開け
+        if (openBtn) {
+            openBtn.addEventListener("click", () => {
+                modal.classList.remove("hidden");
+            });
+        }
+
+        // weather_items に遷移してモーダル開け
+        {% if request.endpoint == "main.weather_items" %}
+            modal.classList.remove("hidden");
+        {% endif %}
+
+        // ボタンでモーダル閉じ
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                modal.classList.add("hidden");
+            });
+        }
+
+        // 背景クリックでモーダル閉じ
+        if (backdrop) {
+            backdrop.addEventListener("click", () => {
+                modal.classList.add("hidden");
+            });
+        }
+    
+    });
+
 
     document.addEventListener("DOMContentLoaded", () => {
         if (window.lucide) {
