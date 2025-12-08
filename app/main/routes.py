@@ -19,7 +19,6 @@ from itertools import groupby
 import os
 from werkzeug.utils import secure_filename
 from app.services.openmeteo import get_daily_weather
-from app.data.destinations import DESTINATIONS
 
 UPLOAD_FOLDER = "app/static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
@@ -104,7 +103,7 @@ def new_travel():
             db.session.rollback()
             flash(f"登録に失敗しました: {e}", "error")             
 
-    return render_template("new_travel.html", destinations=DESTINATIONS)
+    return render_template("new_travel.html")
 
 @main_bp.route("/travel/<int:travel_id>/edit", methods=["GET", "POST"])
 def edit_travel(travel_id):
@@ -140,7 +139,7 @@ def edit_travel(travel_id):
             flash(f"更新に失敗しました: {e}", "error") 
 
     # GETの場合はフォームに既存データを渡す
-    return render_template("edit_travel.html", travel=travel, destinations=DESTINATIONS)
+    return render_template("edit_travel.html", travel=travel)
 
 @main_bp.route("/travel/<int:travel_id>/weather", methods=["POST"])
 def travel_weather(travel_id):
@@ -154,6 +153,16 @@ def travel_weather(travel_id):
         travel.weather_last_update = datetime.now()
         db.session.commit()
     
+    return redirect(url_for("main.pickup_weather_items", travel_id=travel_id))
+
+@main_bp.route("/travel/<int:travel_id>/weather-items")
+def pickup_weather_items(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+
+    weather_types = { day["weather"]["type"] for day in travel.weather_data }
+
+    candidates = Item.query.filter(Item.for_weather.in_(weather_types)).all()
+
     # ---------items_category生成のための重複コード-----------
     travel_items = TravelItem.query.filter_by(travel_id=travel_id).all()
 
@@ -184,7 +193,7 @@ def travel_weather(travel_id):
             "quantity": disp_ti.quantity
         })
 
-        display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
+    display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
 
 
     items_category = {}
@@ -192,74 +201,42 @@ def travel_weather(travel_id):
     for di in display_items:
         cat = di["category"]
         items_category.setdefault(cat, []).append(di)
-
+    
+    category_order = [
+        "衣類", 
+        "生活用品", 
+        "電子機器", 
+        "書類・貴重品", 
+        "衛生・健康", 
+        "美容・スキンケア", 
+        "天候用品", 
+        "季節用品", 
+        "交通関連", 
+        "収納用品", 
+        "ペット同伴用品", 
+        "アウトドア用品", 
+        "その他"
+    ]
     # -----------------------------------------------------   
 
-    return render_template("items_list.html", travel=travel, items_category=items_category, daily_weather=travel.weather_data)
+    return render_template(
+        "items_list.html", 
+        travel=travel, 
+        candidates=candidates,
+        items_category=items_category,
+        category_order=category_order    
+    )
 
-@main_bp.route("/list/<int:travel_id>", methods=["GET", "POST"])
-def items(travel_id):
+@main_bp.route("/travel/<int:travel_id>/auto-items", methods=["POST"])
+def auto_items_post(travel_id):
     travel = Travel.query.get_or_404(travel_id)
-
-    month = travel.departure_date.month
-    if month in [12, 1, 2, 3]:
-        season = "winter"
-    elif month in [4, 5, 6]:
-        season = "spring"
-    elif month in [7, 8, 9]:
-        season = "summer"
-    else:
-        season = "autumn"
-
-    transport = travel.transport
-    weather = "all"
-    days = (travel.return_date - travel.departure_date).days + 1
-
-    purpose_ids = [
-        tp.purpose_id for tp in TravelPurpose.query.filter_by(travel_id=travel_id).all()
-        ]
-
-    item_ids = [
-        pi.item_id for pi in PurposeItem.query.filter(PurposeItem.purpose_id.in_(purpose_ids)).all()
-        ]
-
-    my_set_ids =[
-        mi.id for mi in MySet.query.filter(MySet.user_id == current_user.id).all()
-    ]
-
-    purpose_items = Item.query.filter(
-        Item.id.in_(item_ids),
-        and_(
-            Item.for_season.in_([season, "all"]),
-            Item.for_transport.in_([transport, "all"]),
-            Item.for_weather.in_([weather, "all"]),
-            or_(Item.min_days.is_(None), Item.min_days <= days),
-            or_(Item.max_days.is_(None), Item.max_days >= days)
-        )
-    ).all()
-
-    general_items = Item.query.filter(
-        ~Item.id.in_(PurposeItem.query.with_entities(PurposeItem.item_id).subquery()),
-        Item.for_season.in_([season, "all"]),
-        Item.for_transport.in_([transport, "all"]),
-        Item.for_weather.in_([weather, "all"]),
-        or_(Item.min_days.is_(None), Item.min_days <= days),
-        or_(Item.max_days.is_(None), Item.max_days >= days)
-    ).all()
-
-    # 差分更新処理
+    selected_ids = request.form.getlist("item_ids")
+    selected_items = Item.query.filter(Item.id.in_(selected_ids)).all()
+      
     existing_items = TravelItem.query.filter_by(travel_id=travel.id).all()
     existing_item_ids = {ti.item_id for ti in existing_items}
 
-    new_item_ids = {item.id for item in purpose_items + general_items}
-
-    # 削除: 今のリストにないアイテムを削除
-    for ti in existing_items:
-        if ti.item_id not in new_item_ids:
-            db.session.delete(ti)
-
-    # 追加: 新規アイテムのみ追加
-    for item in purpose_items + general_items:
+    for item in selected_items:
         if item.id in existing_item_ids:
             continue
 
@@ -271,6 +248,122 @@ def items(travel_id):
             quantity = travel.child_count
         else:
             quantity = travel.male_count + travel.female_count + travel.child_count
+
+        add_ti = TravelItem(
+            my_set_item_id=None,
+            item_id=item.id,
+            custom_item_id=None,
+            travel_id=travel_id,
+            quantity=quantity,
+            note=None,
+            check_flag=False,
+            auto_added=True
+        )
+        db.session.add(add_ti)
+    db.session.commit()
+
+    return redirect(url_for("main.items", travel_id=travel_id))
+
+
+@main_bp.route("/list/<int:travel_id>", methods=["GET", "POST"])
+def items(travel_id):
+    travel = Travel.query.get_or_404(travel_id)
+
+    month = travel.departure_date.month
+    if month in [12, 1, 2, 3]:
+        season = "winter"
+    elif month in [7, 8, 9]:
+        season = "summer"
+    else:
+        season = "mid"
+
+    transport = travel.transport or []
+    days = (travel.return_date - travel.departure_date).days + 1
+
+    purpose_ids = [
+        tp.purpose_id for tp in TravelPurpose.query.filter_by(travel_id=travel_id).all()
+        ]
+
+    item_ids = [
+        pi.item_id for pi in PurposeItem.query.filter(PurposeItem.purpose_id.in_(purpose_ids)).all()
+        ]
+
+    # 性別フィルタ用リスト
+    allowed_genders = ["all"]
+    if travel.male_count > 0:
+        allowed_genders.append("male")
+    if travel.female_count > 0:
+        allowed_genders.append("female")
+
+    # 目的別アイテム
+    purpose_items = Item.query.filter(
+        Item.id.in_(item_ids),
+        and_(
+            Item.is_general == False,
+            Item.for_gender.in_(allowed_genders),
+            Item.for_season.in_([season, "all"]),
+            Item.for_weather == "all",
+            or_(Item.min_days.is_(None), Item.min_days <= days),
+            or_(Item.max_days.is_(None), Item.max_days >= days)
+        )
+    ).all()
+
+    # 共通アイテム
+    general_items = Item.query.filter(
+        ~Item.id.in_(PurposeItem.query.with_entities(PurposeItem.item_id).subquery()),
+        Item.is_general == True,
+        Item.for_gender.in_(allowed_genders),
+        Item.for_season.in_([season, "all"]),
+        Item.for_weather == "all",
+        or_(Item.min_days.is_(None), Item.min_days <= days),
+        or_(Item.max_days.is_(None), Item.max_days >= days)
+    ).all()
+
+    # JSONでの配列比較用(PostgreSQLでの検索ができなかったので)
+    filtered_purpose_items = [
+        item for item in purpose_items
+        if (
+            "all" in item.for_transport
+            or any(t in item.for_transport for t in transport)
+        )
+    ]
+
+    filtered_general_items = [
+        item for item in general_items
+        if (
+            "all" in item.for_transport
+            or any(t in item.for_transport for t in transport)
+        )
+    ]
+
+
+    # 差分更新処理
+    existing_items = TravelItem.query.filter_by(travel_id=travel.id).all()
+    existing_item_ids = {ti.item_id for ti in existing_items}
+
+    new_item_ids = {item.id for item in filtered_purpose_items + filtered_general_items}
+
+    # 削除: 今のリストにないアイテムを削除
+    for ti in existing_items:
+        if ti.item_id not in new_item_ids and not ti.auto_added:
+            db.session.delete(ti)
+
+    # 追加: 新規アイテムのみ追加
+    for item in filtered_purpose_items + filtered_general_items:
+        if item.id in existing_item_ids:
+            continue
+        
+        if item.fixed_quantity is not None:
+            quantity = item.fixed_quantity
+        else:
+            if item.for_gender == "male":
+                quantity = travel.male_count
+            elif item.for_gender == "female":
+                quantity = travel.female_count
+            elif item.for_gender == "child":
+                quantity = travel.child_count
+            else:
+                quantity = travel.male_count + travel.female_count + travel.child_count
 
         ini_ti = TravelItem(
             my_set_item_id=None,
@@ -313,7 +406,7 @@ def items(travel_id):
             "quantity": disp_ti.quantity
         })
 
-        display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
+    display_items = sorted(display_items, key=lambda x: (x["category"], x["name"]))
 
 
     items_category = {}
@@ -322,10 +415,34 @@ def items(travel_id):
         cat = di["category"]
         items_category.setdefault(cat, []).append(di)
 
+    category_order = [
+        "衣類", 
+        "生活用品", 
+        "電子機器", 
+        "書類・貴重品", 
+        "衛生・健康", 
+        "美容・スキンケア", 
+        "天候用品", 
+        "季節用品", 
+        "交通関連", 
+        "収納用品", 
+        "ペット同伴用品", 
+        "アウトドア用品", 
+        "その他"
+    ]
+
+    # 天気アイテム再取得用リスト
+    candidates = []
+    if travel.weather_data:
+        weather_types = { day["weather"]["type"] for day in travel.weather_data }
+        candidates = Item.query.filter(Item.for_weather.in_(weather_types)).all()
+
     return render_template(
         "items_list.html",
         travel=travel,
-        items_category=items_category
+        items_category=items_category,
+        category_order=category_order,
+        candidates=candidates
     )
 
 @main_bp.route("/update_quantities/<int:travel_id>", methods=["POST"])
