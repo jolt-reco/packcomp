@@ -1,0 +1,10 @@
+<ul class="weather-item-list">
+  {% for item in candidates %}
+    <li>
+      <label>
+        <input type="checkbox" name="item_ids" value="{{ item.id }}">
+        {{ item.name }}
+      </label>
+    </li>
+  {% endfor %}
+</ul>
