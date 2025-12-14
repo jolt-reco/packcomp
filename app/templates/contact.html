@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}お問い合わせ | PackComp{% endblock %}
+
+{% block content %}
+<div class="contact-wrapper">
+    <h1>お問い合わせ</h1>
+    <p>ご不明点やご要望がある場合は、下記フォームよりご連絡ください。</p>
+
+    <form method="POST" action="{{ url_for('main.contact') }}" class="contact-form">
+        <label for="name">お名前（任意）</label>
+        <input type="text" id="name" name="name">
+
+        <label for="email">メールアドレス（任意）</label>
+        <input type="email" id="email" name="email">
+
+        <label for="message">お問い合わせ内容</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <div class="button-area1">
+            <button type="submit" class="contact-btn">送信</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
