@@ -5,22 +5,39 @@
 {% block content %}
 <h2>マイセット一覧</h2>
 
-<a href="{{ url_for('main.items', travel_id=travel.id) }}">← 持ち物リストへ戻る</a>
+<div class="back-btn">
+    <div class="button-area1">
+        <a href="{{ url_for('main.items', travel_id=travel.id) }}">持ち物リストへ戻る</a>
+    </div>
+</div>
 
 <div id="myset-container">
     {% for ms in mysets %}
         <div class="myset-block" data-myset-id="{{ ms.id }}">
-            <h3 class="myset-title">{{ ms.name }}</h3>
+            <div class="myset-content">
+                <!-- 固定ヘッダー -->
+                <div class="myset-header">
+                    <h3 class="myset-title">{{ ms.name }}</h3>
 
-            <div class="myset-items hidden"></div>
-            
-            <form method="POST" action="{{ url_for('main.add_myset_to_travel', my_set_id=ms.id, travel_id=travel.id) }}" class="apply-form">
-                <button type="submit">このマイセットを追加</button>
-            </form>
+                    <button class="toggle-items-btn" type="button">▼</button>
+                    
+                    <form method="POST" action="{{ url_for('main.add_myset_to_travel', my_set_id=ms.id, travel_id=travel.id) }}" class="apply-form">
+                        <div class="button-area1">
+                            <button type="submit">このマイセットを追加</button>
+                        </div>
+                    </form>
 
-            <a href="{{ url_for('main.edit_myset', my_set_id=ms.id, travel_id=travel.id) }}">編集</a>
+                    <a href="{{ url_for('main.edit_myset', my_set_id=ms.id, travel_id=travel.id) }}" class="edit-myset-btn">
+                        <i data-lucide="pencil"></i>
+                    </a>
 
-            <div class="delete-btn">削除</div>
+                    <div class="delete-myset-btn">
+                        <i data-lucide="trash-2"></i>
+                    </div>
+                </div>
+
+                <div class="myset-items hidden"></div>
+            </div>
         </div>
     {% else %}
         <p>まだマイセットはありません。</p>
@@ -29,12 +46,13 @@
 
 <script>
 document.querySelectorAll(".myset-block").forEach(block => {
+    const toggleBtn = block.querySelector(".toggle-items-btn");
     const title = block.querySelector(".myset-title");
     const itemsBox = block.querySelector(".myset-items");
-    const deleteBtn = block.querySelector(".delete-btn");
+    const deleteBtn = block.querySelector(".delete-myset-btn");
     const mysetId = block.dataset.mysetId;
 
-    title.addEventListener("click", () => {
+    toggleBtn.addEventListener("click", () => {
         // すでに開いていたら閉じる
         if (!itemsBox.classList.contains("hidden")) {
             itemsBox.classList.add("hidden");
