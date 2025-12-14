@@ -8,9 +8,10 @@
     <div class="newtravel-container">    
         <label>旅行タイトル <br><input type="text" name="title"></label><br>
         <label>目的地 <br>
+            {# 表示用 input  #}
             <input type="text" id="autocomplete" placeholder="地名を入力" required>
 
-            <!-- 緯度経度を送る hidden input -->
+            {# 緯度経度送信用hidden input #}
             <input type="hidden" name="destination" id="destination">
             <input type="hidden" name="lat" id="lat">
             <input type="hidden" name="lon" id="lon">
@@ -20,13 +21,13 @@
     </div>
 
     <div class="newtravel-block">
-        <label>男性 <input type="number" name="male_count" min="0"><span>人</span></label><br>
-        <label>女性 <input type="number" name="female_count" min="0"><span>人</span></label><br>
-        <label>子供 <input type="number" name="child_count" min="0"><span>人</span></label><br>
+        <label>男性 <input type="number" name="male_count" min="0"><span>人</span></label>
+        <label>女性 <input type="number" name="female_count" min="0"><span>人</span></label>
+        <label>子供 <input type="number" name="child_count" min="0"><span>人</span></label>
     </div>
 
-    <div class="newtravel-block">
-        <p>交通手段を選択<br></p>
+    <div class="newtravel-block transport-block">
+        <p>交通手段を選択</p>
         <div class="transport-options">
             <label><input type="checkbox" name="transport" value="car"> 車</label>
             <label><input type="checkbox" name="transport" value="train"> 電車</label>
@@ -48,6 +49,7 @@ async defer>
 </script>
 
 <script>
+    // Google Places Autocomplete 初期化
     let autocomplete;
 
     function initAutocomplete() {
@@ -56,6 +58,7 @@ async defer>
         const latInput = document.getElementById("lat");
         const lonInput = document.getElementById("lon");
 
+        // Autocompleteオブジェクト作成
         autocomplete = new google.maps.places.Autocomplete(input, {
             types: ['(cities)'],
             componentRestrictions: { country: 'jp' }

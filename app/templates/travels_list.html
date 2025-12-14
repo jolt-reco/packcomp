@@ -8,17 +8,19 @@
     <div class="travel_card">
         <a href="{{ url_for('main.items', travel_id=travel.id) }}" class="card-link"></a>
 
-        <!-- 削除ボタン -->
-        <form action="{{ url_for('main.delete_travel', travel_id=travel.id) }}" method="POST">
-            <button type="submit" class="delete-travel-btn" onclick="return confirm('本当に削除しますか？')">
-                <i data-lucide="trash-2"></i>
-            </button>
-        </form>
+         <div class="card-actions">
+            <!-- 削除ボタン -->
+            <form action="{{ url_for('main.delete_travel', travel_id=travel.id) }}" method="POST">
+                <button type="submit" class="delete-travel-btn" onclick="return confirm('本当に削除しますか？')">
+                    <i data-lucide="trash-2"></i>
+                </button>
+            </form>
 
-        <!-- 編集ボタン -->
-        <a href="{{ url_for('main.edit_travel', travel_id=travel.id) }}" class="edit-travel-btn">
-            <i data-lucide="pencil"></i>
-        </a>
+            <!-- 編集ボタン -->
+            <a href="{{ url_for('main.edit_travel', travel_id=travel.id) }}" class="edit-travel-btn">
+                <i data-lucide="pencil"></i>
+            </a>
+        </div>
 
         <h3>{{ travel.title }}</h3>
         <div class="travel_image"
