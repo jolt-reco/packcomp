@@ -2,10 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_wtf import CSRFProtect
 
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
+csrf = CSRFProtect()
 
 def create_app(config_name="default"):
     app = Flask(__name__)
@@ -22,6 +24,9 @@ def create_app(config_name="default"):
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+
+    # CSRF対策初期化
+    csrf.init_app(app)
 
     # Blueprint登録
     from app.main import main_bp
