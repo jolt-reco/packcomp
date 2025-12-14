@@ -1,24 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}アイテム追加フォーム{% endblock %}
+{% block title %}アイテム作成フォーム{% endblock %}
 
 {% block content %}
-<h2>アイテムを追加</h2>
-<form method="POST" action="{{ url_for('main.new_custom_item', travel_id=travel_id) }}" enctype="multipart/form-data">
-    <label>アイテム名 <br><input type="text" name="name"></label><br>
-   <label>カテゴリー <br>
-        <select name="category">
-            {% for c in categories %}
-            <option value="{{ c }}">{{ c }}</option>
-            {% endfor %}
-        </select>
-    </label><br>
-    <label>画像 <br><input type="file" name="image" accept="image/*"></label><br>
-    <label>メモ <br><input type="text" name="note"></label><br>
+<h2>アイテムを作成</h2>
 
-    <div class="button-area2">
-        <button type="submit">リストへ追加</button>
+<div class="custom-form-container">
+    <form method="POST" action="{{ url_for('main.new_custom_item', travel_id=travel_id) }}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="item-name">アイテム名</label>
+            <input type="text" id="item-name" name="name" placeholder="例: Tシャツ" required>
+        </div>
+
+        <div class="form-group">
+            <label for="item-category">カテゴリー</label>
+            <select id="item-category" name="category" required>
+                {% for c in categories %}
+                <option value="{{ c }}">{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="button-area1">
+            <button type="submit" class="btn-submit">リストへ追加</button>
+        </div>
+    </form>
+</div>
+
+<div class="back-btn">
+    <div class="button-area1">
+        <a href="{{ url_for('main.custom_items_list', travel_id=travel_id) }}">アイテムリストへ戻る</a>
     </div>
-</form>
+</div>
 
 {% endblock %}
