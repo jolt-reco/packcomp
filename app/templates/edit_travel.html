@@ -25,7 +25,7 @@
         <label>子供 <input type="number" name="child_count" min="0" value="{{ travel.child_count }}"><span>人</span></label><br>    
     </div>
 
-    <div class="newtravel-block">
+    <div class="newtravel-block transport-block">
         <p>交通手段を選択<br></p>
         <div class="transport-options">
             <label><input type="checkbox" name="transport" value="car" {% if 'car' in travel.transport %}checked{% endif %}> 車</label>
@@ -82,7 +82,7 @@ async defer>
         } 
 
         document.querySelector("form").addEventListener("submit", function(e) {
-            if (!destInput.value || input.value !== destInput.value) {
+            if (!latInput.value || !lonInput.value) {
                 e.preventDefault();
                 alert("必ずGoogleマップの候補から目的地を選択してください");
             }
