@@ -3,30 +3,41 @@
 {% block title %}{{ myset.name }} 編集{% endblock %}
 
 {% block content %}
-<h2>{{ myset.name }} の編集</h2>
+<h2>マイセット: {{ myset.name }} の編集</h2>
 
-<a href="{{ url_for('main.mysets_list', travel_id=travel_id) }}">← マイセット一覧に戻る</a>
+<div class="back-btn">
+    <div class="button-area1">
+            <a href="{{ url_for('main.mysets_list', travel_id=travel_id) }}">マイセット一覧に戻る</a>
+    </div>
+</div>
 
-<h3>マイセット中身</h3>
 <div id="myset-items">
+    {% set has_items = False %}
+
     {% for category, ms_items in items_category.items() %}
-        <h4>{{ category }}</h4>
-            {% for ms_item in ms_items %}
-                <div class="myset-item" data-ms-item-id="{{ ms_item.id }}">
-                   {{ ms_item.name }}
-                    <button type="button" class="delete-btn">削除</button>
-                </div>
-            {% endfor %}
-    {% else %}
-        <p>まだアイテムはありません</p>
+        {% if ms_items|length > 0 %}
+            <div class="category-block">
+                {% set has_items = True %}
+                <h4>{{ category }}</h4>
+                {% for ms_item in ms_items %}
+                    <div class="myset-item" data-ms-item-id="{{ ms_item.id }}">
+                    {{ ms_item.name }}
+                        <button type="button" class="delete-btn">削除</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
 
-<a href="{{ url_for('main.add_items_to_myset', my_set_id=myset.id, travel_id=travel_id) }}">追加</a>
-
+<div class="button-area1">
+    <a href="{{ url_for('main.add_items_to_myset', my_set_id=myset.id, travel_id=travel_id) }}">アイテムを追加</a>
+</div>
 
 <script>
     // 削除ボタン
+    const mySetId = {{ myset.id }};
+
     document.querySelectorAll(".myset-item").forEach(row => {
         const deleteBtn = row.querySelector(".delete-btn");
         const msItemId = row.dataset.msItemId;
@@ -34,12 +45,28 @@
         deleteBtn.addEventListener("click", () => {
             if(!confirm("本当に削除しますか？")) return;
 
-            fetch(`/myset/{{ myset.id }}/item/${msItemId}/delete`, {
-                method: "POST"
-            })
+            const url = `/myset/${mySetId}/item/${msItemId}/delete`;
+
+            fetch(url, { method: "POST" })
             .then(res => {
                 if(res.ok) {
-                    div.remove();
+
+                    const categoryWrapper = row.closest(".category-block");
+
+                    row.remove();
+
+                    // 残りアイテム数チェック
+                    const remaining = categoryWrapper.querySelectorAll(".myset-item").length;
+
+                    if (remaining === 0) {
+                        // h4 を削除
+                        const header = categoryWrapper.querySelector("h4");
+                        if (header && header.tagName === "H4") {
+                            header.remove();
+                        }
+                        categoryWrapper.remove();
+                    }
+
                 } else {
                     alert("削除できませんでした");
                 }
