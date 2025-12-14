@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.auth import auth_bp
 from app.models import User
+import uuid
 
 # ログインページ
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -50,19 +51,31 @@ def register():
 @auth_bp.route("/logout")
 @login_required
 def logout():
+    if current_user.is_guest:
+        db.session.delete(current_user)
+        db.session.commit()
+
     logout_user()
+
     flash("ログアウトしました。", "success")
     return redirect(url_for("auth.login"))
 
 # ゲストログイン
 @auth_bp.route("/guest_login")
 def guest_login():
-    guest = User.query.filter_by(email="guest@example.com").first()
-    if not guest:
-        guest = User(user_name="ゲスト", email="guest@example.com")
-        guest.set_password("guestpass")
-        db.session.add(guest)
-        db.session.commit()
+    #　一意ゲストユーザーID作成
+    uid = uuid.uuid4().hex[:8]
+
+    guest = User(
+        user_name=f"guest_{uid}",
+        email=f"guest_{uid}@guest.local",
+        is_guest=True
+    )
+    
+    # 一意パスワード設定
+    guest.set_password(uuid.uuid4().hex)
+    db.session.add(guest)
+    db.session.commit()
     login_user(guest)
     flash("ログインしました。ようこそゲストさん！", "success")
     return redirect(url_for("main.travels_list"))
