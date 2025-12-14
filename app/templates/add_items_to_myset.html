@@ -4,67 +4,97 @@
 {% block content %}
 <h2>{{ myset.name }} にアイテム追加</h2>
 
-<div class="tabs">
-  <button class="tab-btn" data-tab="items">標準アイテム</button>
-  <button class="tab-btn" data-tab="custom">カスタムアイテム</button>
+<div class="button-area1">
+  <button id="add-btn">マイセットに追加</button>
 </div>
 
-<div id="items" class="tab-content">
-  {% for category, items in items_category.items() %}
-    <h4>{{ category }}</h4>
-    {% for item in items %}
-      <div>
-        <input type="checkbox" name="item_ids" value="{{ item.id }}"> {{ item.name }}
-      </div>
-    {% endfor %}
-  {% endfor %}
+<div class="back-btn">
+    <div class="button-area1">
+      <a href="{{ url_for('main.edit_myset', my_set_id=myset.id, travel_id=travel_id) }}">マイセット編集に戻る</a>
+    </div>
 </div>
 
-<div id="custom" class="tab-content" style="display:none;">
-  {% for category, cis in custom_items_category.items() %}
-    <h4>{{ category }}</h4>
-    {% for ci in cis %}
-      <div>
-        <input type="checkbox" name="custom_ids" value="{{ ci.id }}"> {{ ci.name }}
-      </div>
-    {% endfor %}
-  {% endfor %}
+<div class="tab-container">
+    <div class="tab-buttons">
+        <button class="tab-btn" data-tab="items">標準アイテム</button>
+        <button class="tab-btn" data-tab="customs">カスタムアイテム</button>
+    </div>
 </div>
 
-<button id="add-btn">マイセットに追加</button>
+<div class="tab-wrapper">
+    <div id="items" class="tab-content">
+        {% for category in category_order %}
+        {% set items = items_category.get(category, []) %}
+        {% if items %}
+            <h4>{{ category }}</h4>
+            {% for item in items %}
+            <div class="item">
+                <input type="checkbox" name="item_ids" value="{{ item.id }}"> {{ item.name }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
 
-<a href="{{ url_for('main.edit_myset', my_set_id=myset.id, travel_id=travel_id) }}">戻る</a>
+    <div id="customs" class="tab-content" style="display:none;">
+        {% for category in category_order %}
+        {% set custom_items = custom_items_category.get(category, []) %}
+        {% if custom_items %}
+            <h4>{{ category }}</h4>
+            {% for ci in custom_items %}
+                <div class="custom">
+                    <input type="checkbox" name="custom_ids" value="{{ ci.id }}"> {{ ci.name }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
 
 <script>
 // --- タブ切り替え ---
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const target = btn.dataset.tab;
+const tabButtons = document.querySelectorAll(".tab-btn");
 
-    document.querySelectorAll(".tab-content").forEach(tc => tc.style.display = "none");
-    document.getElementById(target).style.display = "block";
-  });
+// 初期表示
+document.querySelectorAll(".tab-content").forEach(tc => tc.style.display = "none");
+document.getElementById("items").style.display = "block"; // 最初にitemsタブ表示
+tabButtons.forEach(btn => btn.classList.remove("active"));
+document.querySelector('.tab-btn[data-tab="items"]').classList.add("active");
+
+// タブボタンクリック時
+tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const target = btn.dataset.tab;
+
+        // ボタンのアクティブ切り替え
+        document.querySelectorAll(".tab-content").forEach(tc => tc.style.display = "none");
+        document.getElementById(target).style.display = "block";
+
+        // タブのアクティブ切り替え
+        tabButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+    });
 });
 
 // --- 追加ボタン ---
 document.getElementById("add-btn").addEventListener("click", () => {
-  const itemIds = [...document.querySelectorAll("input[name='item_ids']:checked")].map(input => input.value);
-  const customIds = [...document.querySelectorAll("input[name='custom_ids']:checked")].map(input => input.value);
+    const itemIds = [...document.querySelectorAll("input[name='item_ids']:checked")].map(input => input.value);
+    const customIds = [...document.querySelectorAll("input[name='custom_ids']:checked")].map(input => input.value);
 
-  fetch("{{ url_for('main.add_items_to_myset_post', my_set_id=myset.id, travel_id=travel_id) }}", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      item_ids: itemIds,
-      custom_ids: customIds
+    fetch("{{ url_for('main.add_items_to_myset_post', my_set_id=myset.id, travel_id=travel_id) }}", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+        item_ids: itemIds,
+        custom_ids: customIds
+        })
     })
-  })
-  .then(res => {
-    // Flask が redirect() を返してきた場合、
-    // fetch では自動で追従しないので、最終URLを自分で取り出す必要がある
-    const redirectURL = "{{ url_for('main.edit_myset', my_set_id=myset.id, travel_id=travel_id) }}"
-    window.location.href = redirectURL;
-  });
+    .then(res => {
+        // Flask が redirect() を返してきた場合、
+        // fetch では自動で追従しないので、最終URLを自分で取り出す必要がある
+        const redirectURL = "{{ url_for('main.edit_myset', my_set_id=myset.id, travel_id=travel_id) }}"
+        window.location.href = redirectURL;
+    });
 });
 </script>
 
