@@ -7,6 +7,8 @@
 
 <div class="custom-container">
     <form method="POST" action="{{ url_for('main.add_custom_to_travel', travel_id=travel.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
     {% for category in category_order %}
         {% set items = custom_items_category.get(category, []) %}
         {% if items %}

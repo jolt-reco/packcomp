@@ -11,6 +11,7 @@
          <div class="card-actions">
             <!-- 削除ボタン -->
             <form action="{{ url_for('main.delete_travel', travel_id=travel.id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="delete-travel-btn" onclick="return confirm('本当に削除しますか？')">
                     <i data-lucide="trash-2"></i>
                 </button>

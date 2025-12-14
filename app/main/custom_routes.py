@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app import db
 from app.models import Travel, CustomItem, TravelItem, Item
 from . import main_bp
+from app import csrf
 
 @main_bp.route("/custom_item/<int:travel_id>", methods=["GET"])
 @login_required
@@ -99,6 +100,7 @@ def add_custom_to_travel(travel_id):
     flash("アイテムを持ち物リストに追加しました", "success")
     return redirect(url_for("main.items", travel_id=travel_id))
 
+@csrf.exempt
 @main_bp.route("/custom_item/<int:travel_id>/delete/<int:item_id>", methods=["POST"])
 @login_required
 def delete_custom_item(travel_id, item_id):

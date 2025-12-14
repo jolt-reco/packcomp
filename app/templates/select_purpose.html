@@ -4,6 +4,7 @@
 {% block content %}
 <h2>旅行の目的を選択してください</h2>
 <form method="POST" action="{{ url_for('main.select_purpose', travel_id=travel.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="purpose-section"></div>
         {% for category, purposes in grouped_purposes.items() %}
             <h3>{{ category }}</h3>

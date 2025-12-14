@@ -3,7 +3,9 @@ from flask_login import login_required, current_user
 from app import db
 from app.models import Travel, MySet, MySetItem, TravelItem, Item, CustomItem
 from . import main_bp
+from app import csrf
 
+@csrf.exempt
 @main_bp.route("/myset/create", methods=["POST"])
 @login_required
 def new_myset():
@@ -103,6 +105,7 @@ def add_myset_to_travel(my_set_id, travel_id):
     flash("マイセットを持ち物リストに追加しました", "success")
     return redirect(url_for("main.items", travel_id=travel_id))
 
+@csrf.exempt
 @main_bp.route("/myset/<int:my_set_id>/delete", methods=["POST"])
 @login_required
 def delete_myset(my_set_id):
@@ -161,6 +164,7 @@ def edit_myset(my_set_id, travel_id):
         travel_id=travel_id
     )
 
+@csrf.exempt
 @main_bp.route("/myset/<int:my_set_id>/item/<int:ms_item_id>/delete", methods=["POST"])
 @login_required
 def delete_myset_item(my_set_id, ms_item_id):
@@ -169,6 +173,7 @@ def delete_myset_item(my_set_id, ms_item_id):
     db.session.commit()
     return "", 200
 
+@csrf.exempt
 @main_bp.route("/myset/<int:travel_id>/add_items/<int:my_set_id>")
 @login_required
 def add_items_to_myset(travel_id, my_set_id):

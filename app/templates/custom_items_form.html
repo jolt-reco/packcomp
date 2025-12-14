@@ -7,6 +7,8 @@
 
 <div class="custom-form-container">
     <form method="POST" action="{{ url_for('main.new_custom_item', travel_id=travel_id) }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
         <div class="form-group">
             <label for="item-name">アイテム名</label>
             <input type="text" id="item-name" name="name" placeholder="例: Tシャツ" required>

@@ -8,6 +8,8 @@
     <p>ご不明点やご要望がある場合は、下記フォームよりご連絡ください。</p>
 
     <form method="POST" action="{{ url_for('main.contact') }}" class="contact-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <label for="name">お名前（任意）</label>
         <input type="text" id="name" name="name">
 

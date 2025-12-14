@@ -4,7 +4,7 @@ from app import db
 from app.models import Travel, TravelItem, Item
 from . import main_bp
 from .utils.item_generation import apply_diff_generation
-
+from app import csrf
 
 @main_bp.route("/travel/<int:travel_id>/auto-items", methods=["POST"])
 def auto_items_post(travel_id):
@@ -142,6 +142,7 @@ def update_quantities(travel_id):
     db.session.commit()
     return redirect(url_for('main.items', travel_id=travel_id))
 
+@csrf.exempt
 @main_bp.route("/list/<int:travel_id>/delete/<int:item_id>", methods=["POST"])
 @login_required
 def delete_item(travel_id, item_id):

@@ -22,6 +22,7 @@
                     <button class="toggle-items-btn" type="button">▼</button>
                     
                     <form method="POST" action="{{ url_for('main.add_myset_to_travel', my_set_id=ms.id, travel_id=travel.id) }}" class="apply-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <div class="button-area1">
                             <button type="submit">このマイセットを追加</button>
                         </div>

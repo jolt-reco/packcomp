@@ -14,14 +14,16 @@
 <!-- 天気情報 -->
 <div class="weather-acquisition">
     <form method="POST" action="{{ url_for('main.travel_weather', travel_id=travel.id) }}">
-    <div class="button-area1">
-        <button type="submit" class="btn btn-primary">
-            天気情報を取得
-        </button>
-    </div>
-    {% if travel.weather_last_update %}
-        <small>最終取得: {{ travel.weather_last_update.strftime('%Y-%m-%d %H:%M') }}</small>
-    {% endif %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="button-area1">
+            <button type="submit" class="btn btn-primary">
+                天気情報を取得
+            </button>
+        </div>
+        {% if travel.weather_last_update %}
+            <small>最終取得: {{ travel.weather_last_update.strftime('%Y-%m-%d %H:%M') }}</small>
+        {% endif %}
     </form>
 </div>
 
@@ -62,6 +64,8 @@
         <button type="button" id="closeWeatherModal" class="modal-close">✕</button>
 
         <form method="POST" action="{{ url_for('main.auto_items_post', travel_id=travel.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
             {% include "_candidate_items.html" %}
             <div class="button-area1">
                 <button type="submit" class="btn btn-primary">追加する</button>
@@ -71,6 +75,8 @@
 </div>
 
 <form id="qty-form" method="POST" action="{{ url_for('main.update_quantities', travel_id=travel.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    
     <div class="items-grid">
         {% for category in category_order %}
             {% set items = items_category.get(category, []) %}
@@ -124,6 +130,8 @@
     </a>
 
     <form method="POST" action="{{ url_for('main.reset_items', travel_id=travel.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <button id="btn-reset-items" type="submit" data-label="リストを再生成">
             <i data-lucide="rotate-ccw"></i>
         </button>
