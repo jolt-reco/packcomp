@@ -10,7 +10,9 @@
         <header>
             <h1><a href="{{ url_for('main.top')}}">Pack Comp</a></h1>
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.logout') }}" class="logout-btn">ログアウト</a>
+                <div class="button-area1">
+                    <a href="{{ url_for('auth.logout') }}" class="logout-btn">ログアウト</a>
+                </div>
             {% endif %}
         </header>
 
@@ -33,10 +35,26 @@
             </div>
         </footer>
 
+        {# Lucidスクリプト読み込み #}
         <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+        
         <script>
+        // Lucidアイコン描画
             lucide.createIcons();
         </script>
-
+        
+        <script>
+            // ページ読み込み後にflashを自動で消す
+            window.addEventListener('DOMContentLoaded', () => {
+                const flashes = document.querySelectorAll('.flash-messages li');
+                flashes.forEach(flash => {
+                setTimeout(() => {
+                    flash.style.transition = 'opacity 0.5s';
+                    flash.style.opacity = 0;
+                    setTimeout(() => flash.remove(), 500); // フェード後に削除
+                }, 3000); // 3秒後に消える
+                });
+            });
+        </script>
     </body>
 </html>
