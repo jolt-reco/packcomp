@@ -17,38 +17,41 @@
         {% endfor %}
     </div>
 
-  <input type="hidden" name="purposes" id="selected-purposes">
-  <button type="submit" class="submit-btn">持ち物リスト生成</button>
+    <input type="hidden" name="purposes" id="selected-purposes">
+    <button type="submit" class="submit-btn">持ち物リスト生成</button>
 </form>
 
 <script>
-  const cards = document.querySelectorAll('.purpose-card');
-  const input = document.getElementById('selected-purposes');
-  const preSelected = {{ pre_selected_purposes | tojson }}; 
-  const selected = new Set(preSelected.map(String));
+    const cards = document.querySelectorAll('.purpose-card');
+    const input = document.getElementById('selected-purposes');
+  
+    // 事前選択された目的IDのセット
+    const preSelected = {{ pre_selected_purposes | tojson }}; 
+    const selected = new Set(preSelected.map(String));
 
   // 初期状態でカードに selected クラスをつける
-  cards.forEach(card => {
-    const id = card.dataset.id;
-    if (selected.has(id)) {
-      card.classList.add('selected');
-    }
-
-      card.addEventListener('click', () => {
+    cards.forEach(card => {
         const id = card.dataset.id;
         if (selected.has(id)) {
-          selected.delete(id);
-          card.classList.remove('selected');
-        } else {
-          selected.add(id);
-          card.classList.add('selected');
+        card.classList.add('selected');
         }
-        input.value = Array.from(selected).join(',');
-      });
-  });
 
-  // ページロード時に hidden に初期値をセット
-  input.value = Array.from(selected).join(',');
+        // 選択・解除を切り替え
+        card.addEventListener('click', () => {
+            const id = card.dataset.id;
+            if (selected.has(id)) {
+            selected.delete(id);
+            card.classList.remove('selected');
+            } else {
+            selected.add(id);
+            card.classList.add('selected');
+            }
+            input.value = Array.from(selected).join(',');
+        });
+    });
+
+    // ページロード時に hidden に初期値をセット
+    input.value = Array.from(selected).join(',');
 
 </script>
 
