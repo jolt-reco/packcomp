@@ -3,12 +3,10 @@
 {% block content %}
 <h2>ログイン</h2>
 <div class="login-container">
-    <div class="tab-buttons">
-        <button id="login-tab" class="active">ログイン</button>
-        <button id="register-tab">新規登録</button>
-    </div>
 
     <form id="login-form" method="post" action="{{ url_for('auth.login')}}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
         <input type="email" placeholder="Email" id="login-email" name="email" required>
         <input type="password" placeholder="Password" id="login-password" name="password" required>
         <div class="button-area1">
@@ -16,41 +14,11 @@
         </div>
     </form>
 
-    <form id="register-form" method="post" action="{{ url_for('auth.register')}}">
-        <input type="text" placeholder="Username" name="username" required>
-        <input type="email" placeholder="Email" id="register-email" name="email" required>
-        <input type="password" placeholder="Password" id="registerpassword" name="password" required>
-        <div class="button-area1">
-            <button type="submit">新規登録</button>
-        </div>
-    </form>
+    <p class="auth-switch">
+        アカウントをお持ちでない方は
+        <a href="{{ url_for('auth.register') }}">新規登録</a>
+    </p>
+
 </div>
 
-<script>
-    const loginTab = document.getElementById('login-tab');
-    const registerTab = document.getElementById('register-tab');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-
-    // 初期表示
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-
-    // ログインタブクリック
-    loginTab.addEventListener('click', () => {
-        loginTab.classList.add('active');
-        registerTab.classList.remove('active');
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-    });
-
-    // 新規登録タブクリック
-    registerTab.addEventListener('click', () => {
-        registerTab.classList.add('active');
-        loginTab.classList.remove('active');
-        registerForm.style.display = 'block';
-        loginForm.style.display = 'none';
-    });
-
-</script>
 {% endblock %}

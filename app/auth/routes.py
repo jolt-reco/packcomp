@@ -45,7 +45,7 @@ def register():
         flash("登録が完了しました！ログインしてください。", "info")
         return redirect(url_for("auth.login"))
 
-    return render_template("auth/login.html")
+    return render_template("auth/register.html")
 
 # ログアウトページ
 @auth_bp.route("/logout")
