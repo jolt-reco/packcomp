@@ -10,6 +10,7 @@ class User(UserMixin, db.Model):
     user_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
+    is_guest = db.Column(db.Boolean, default=False)
 
     travels = db.relationship("Travel", back_populates="user", cascade="all, delete-orphan")
     bags = db.relationship("Bag", back_populates="user", cascade="all, delete-orphan")
