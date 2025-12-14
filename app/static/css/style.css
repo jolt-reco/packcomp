@@ -24,20 +24,10 @@ header a{
     text-decoration: none;
 }
 
-header a.logout-btn {
-    color: white;
+header .button-area1{
     position: absolute;
-    top: 10px;    /* ヘッダー内の上端からの距離 */
-    right: 20px;  /* 右端からの距離 */
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    background-color: #6A994E;
-    transition: background-color 0.2s;
-}
-
-header a.logout-btn:hover {
-    background-color: #A7C957;
+    top: 10px;   
+    right: 20px; 
 }
 
 h1, h2, h3 {
@@ -51,15 +41,22 @@ label{
     font-weight: bold;
 }
 
+p {
+    text-align: center;
+}
+
 .flash-messages {
     width: 90%;       /* 親枠の幅 */
     max-width: 600px; /* 任意の最大幅 */
+    min-height: 40px; /* flash消えてもスペースを確保 */
+    height: 40px;
     margin: 0 auto 12px; /* 中央寄せ + 下マージン */
     padding: 0;
     list-style: none;
 }
 
 .flash-messages li {
+    font-size: 10px;
     padding: 12px 16px;
     border-radius: 8px;
     margin-bottom: 12px;
@@ -98,7 +95,7 @@ label{
     color: #C43F3F;
 }
 
-.hidden { display: none; }
+.hidden { display: none !important; }
 
 /* フッター全体 */
 footer {
@@ -144,8 +141,24 @@ footer .footer-links a:hover {
     }
 }
 
+/* チェックボックスのスタイル調整 */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
 
 /* ====== ボタン共通 ====== */
+
+.back-btn {
+    position: absolute;
+    top: 11px;      
+    left: 16px;     
+    z-index: 1000;  
+}
+
 .button-area1, .button-area2 {
     text-align: center; /* 子のaタグを中央寄せ */
 }
@@ -154,24 +167,23 @@ footer .footer-links a:hover {
     background-color: #6A994E;
     display: inline-block;
     text-decoration: none;
-    margin: 0 auto 30px;
+    margin: 0 auto;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px; 
     font-size: 16px;
     cursor: pointer;
-    line-height: 1; /* これ重要！ボタンの高さをaと揃える */
-    vertical-align: middle;     /* 要素の縦位置を揃える */
-    box-sizing: border-box;     /* paddingを含めた高さ幅にする */
-    /* ここからオシャレ強化 */
+    line-height: 1;
+    vertical-align: middle;
+    box-sizing: border-box;
     box-shadow: 0 4px 12px rgba(52, 135, 70, 0.4);
     transition: 0.2s ease;
     font-weight: 600;
 }
 .button-area1 a:hover,
 .button-area1 button:hover {
-    background-color: #A7C957;  /* 元の青より少し濃い色 */
+    background-color: #A7C957;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(157, 245, 146, 0.55);
     opacity: 0.95;
@@ -182,6 +194,15 @@ footer .footer-links a:hover {
     box-shadow: 0 3px 8px rgba(100, 165, 240, 0.3);
 }
 
+/* スマホ用調整 */
+@media (max-width: 768px) {
+
+    .back-btn .button-area1 a {
+        font-size: 14px; 
+        max-width: 120px;
+    }
+
+}
 
 .button-area2 a, .button-area2 button{
     background-color: #3B5570;
@@ -224,7 +245,6 @@ footer .footer-links a:hover {
 /* ====== トップページ用 ====== */
 
 .top-text {
-    padding: 10px 20px;
     text-align: center;
 }
 
@@ -241,7 +261,6 @@ footer .footer-links a:hover {
     margin-bottom: 30px;
 }
 
-/* 全体の余白調整 */
 .welcome-wrapper {
     max-width: 600px;
     margin: 0 auto;
@@ -290,22 +309,36 @@ footer .footer-links a:hover {
 
 /* ====== 旅行一覧画面用 ====== */
 .travel_container {
-  display: grid;
-  grid-template-columns: repeat(2, 435px);
-  gap: 20px;
-  padding: 30px;
-  justify-content: center; /* 画面中央寄せ */
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 20px;
+    padding: 30px;
+    justify-content: center; /* 画面中央寄せ */
+}
+
+/* スマホ用 - 1列にして縦積み */
+@media (max-width: 600px) {
+    .travel_container {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+    .travel_card {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
 }
 
 .travel_card {
-  position: relative;      /* card-link用 */
-  background: #F4A259;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
+    position: relative;      /* card-link用 */
+    width: 300px;
+    background: #F4A259;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 }
 
 .travel_card:hover {
@@ -335,25 +368,23 @@ footer .footer-links a:hover {
     color: white;
 }
 
-/* 削除アイコンボタン */
-.delete-travel-btn {
+/* カード内のアクションボタン配置 */
+.card-actions {
     position: absolute;
-    top: -1px;
-    right: 0px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    z-index: 5;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
 }
 
-.edit-travel-btn {
-    position: absolute;
-    top: 0px;
-    left: -180px;
-    border: none;
+/* ボタンの基本スタイル */
+.edit-travel-btn,
+.delete-travel-btn {
     background: none;
+    border: none;
     cursor: pointer;
-    z-index: 10;
+    padding: 4px;
 }
 
 .delete-travel-btn svg, .edit-travel-btn svg {
@@ -367,38 +398,68 @@ footer .footer-links a:hover {
     transform: scale(1.1); /* ほんのり拡大 */
 }
 
-
-/* ====== 旅行登録画面用 ====== */
-.newtravel-container {
-    background-color: white;
-    width: 60%;
+/* ====== 規約、プライバシーポリシー、お問い合わせ画面用 ====== */
+.terms-wrapper, 
+.privacy-wrapper,
+.contact-wrapper {
+    max-width: 800px;
     margin: 20px auto;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    margin-bottom: 15px
-
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    line-height: 1.7;
 }
 
-.newtravel-block {
+.contact-form {
     display: flex;
-    gap: 20px;
-    background-color: white;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.contact-form label {
+    font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.contact-form textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+/* ====== 旅行登録画面用 ====== */
+.newtravel-container,
+.newtravel-block {
+    background-color: #fff;
     width: 60%;
+    max-width: 600px;
     margin: 20px auto;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.newtravel-container {
+    text-align: left;
+}
+
+/* 下のカード（人数・交通手段）は中身を縦に並べる */
+.newtravel-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     text-align: center;
 }
 
-.newtravel-block label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
+/* 旅行名・目的地入力欄調整 */
 .newtravel-container input {
     margin: 0 auto 20px;
     width: 100%;
@@ -410,30 +471,60 @@ footer .footer-links a:hover {
     box-sizing: border-box;
 }
 
-.newtravel-block input {
-    margin: 0 auto 20px;
-    width: 60%;
-    height: 45px;
-    padding: 8px 10px;
+/* 人数入力ブロック */
+.newtravel-block:not(.transport-block) label {
+    display: grid;
+    grid-template-columns: auto 1fr auto; 
+    align-items: center;
+    column-gap: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;   
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    text-align: left;
 }
 
-.newtravel-block p {
+.newtravel-block:not(.transport-block) input[type="number"] {
+    width: 100%;
+    max-width: 110px;
+    height: 45px;
+    font-size: 18px;
     font-weight: bold;
+    padding: 4px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }
 
-.transport-options label {
-  display: inline-block;
-  margin: 5px;
-  padding: 8px 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
+/* 交通手段選択ブロック */
+
+/* ボタンの並べ方 */
+.transport-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.transport-block p {
+    margin: 0;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* ボタン本体 */
+.newtravel-block .transport-options label {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    margin: 0px auto;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    user-select: none;
 }
 
 .transport-options input[type="checkbox"] {
@@ -452,6 +543,16 @@ footer .footer-links a:hover {
   display: flex;
   justify-content: center;
   gap: 5px;
+}
+
+/* スマホ用調整 */
+@media (max-width: 600px) {
+
+    .newtravel-container,
+    .newtravel-block {
+        width: 90%;
+        padding: 20px;
+    }
 }
 
 /* ====== 目的選択画面用 ====== */
@@ -510,20 +611,22 @@ footer .footer-links a:hover {
 
 /* ====== 持ち物リスト画面用 ====== */
 
+/* 進捗ゲージ */
 #progress-bar {
-    width: 700px;
+    width: 70%;
+    max-width: 700px;
     height: 20px;
-    background: #e0e0e0;        /* 薄いグレー */
+    background: #e0e0e0;
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 5px;
-    margin: 20px auto;
+    margin: 20px auto 5px;
+    box-sizing: border-box;
 }
 
 #progress-fill {
     height: 100%;
-    width: 0%;                  /* JSで動的に変更 */
-    background: linear-gradient(90deg, #6A994E, #A7C957); /* 紫→青グラデ */
+    width: 0%;
+    background: linear-gradient(90deg, #6A994E, #A7C957);
     border-radius: 10px;
     transition: width 0.5s ease-in-out;
     position: relative;
@@ -553,6 +656,17 @@ footer .footer-links a:hover {
     text-align: center;
 }
 
+.quantity-side-actions {
+    position: fixed;
+    top: 30%;
+    right: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 3000;
+}
+
 .side-actions {
     position: fixed;
     top: 50%;
@@ -564,13 +678,14 @@ footer .footer-links a:hover {
     z-index: 2000;
 }
 
-/* button と a を共通で丸青に統一 */
 .side-actions > button,
-.side-actions > a {
+.side-actions > a,
+.side-actions > form > button, 
+.quantity-side-actions > button{
     width: 50px;
     height: 50px;
-    background: #F4A259;          /* 青背景 */
-    border-radius: 50%;           /* 丸 */
+    background: #F4A259;        
+    border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     border: none;
     display: flex;
@@ -589,12 +704,16 @@ footer .footer-links a:hover {
 }
 
 /* ホバーでほんのり反応 */
-.side-actions > *:hover {
+.side-actions > button:hover,
+.side-actions > a:hover,
+.side-actions > form > button:hover {
     background: #f0c8a6;
 }
 
 /* ▼ ラベル（button も a も data-label で統一） */
-.side-actions > *::after {
+.side-actions > form > button::after,
+.side-actions > button::after,
+.side-actions > a::after {
     content: attr(data-label);
     position: absolute;
     right: 55px;
@@ -611,7 +730,9 @@ footer .footer-links a:hover {
 }
 
 /* ホバー時にラベル表示 */
-.side-actions > *:hover::after {
+.side-actions > form > button:hover::after,
+.side-actions > button:hover::after,
+.side-actions > a:hover::after {
     opacity: 1;
     transform: translateX(0);
 }
@@ -633,14 +754,19 @@ footer .footer-links a:hover {
     z-index: 1001;
 }
 
-.side-actions.mode-on > button {
-    z-index: 1002; /* オーバーレイより上に置く */
+.side-actions.mode-on > button:not(#register-myset-mode):not(#submit-myset-btn),
+.side-actions.mode-on > a {
+    z-index: 800;
 }
 
-.side-actions > a {
-    z-index: 800; /* オーバーレイの下に置く */
+.side-actions.mode-on #register-myset-mode,
+.side-actions.mode-on #submit-myset-btn {
+    z-index: 1002; /* overlay の上に置く */
 }
 
+body.mode-on .category-block h3 {
+    color: white;
+}
 
 .items-grid {
     max-width: 1000px;   /* 最大幅 */
@@ -650,7 +776,7 @@ footer .footer-links a:hover {
     flex-direction: column;
     gap: 20px;            /* カテゴリ間の余白 */
     position: relative; 
-    z-index: 1001;
+    z-index: 1000;
 }
 
 /* カテゴリごとのカードコンテナは縦に積む */
@@ -662,13 +788,13 @@ footer .footer-links a:hover {
 
 /* カード本体 */
 .item-card {
-  display: flex;          /* カード内を横並び */
-  align-items: center;    /* 高さを揃える */
-  gap: 15px;              /* 要素間の横余白 */
+  display: flex;
+  align-items: center;
+  gap: 15px;  
   padding: 10px;
-  background-color: #fff;          /* 白背景 */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* ふわっとした影 */
-  transition: transform 0.2s, box-shadow 0.2s; /* ホバーで演出 */
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
   border: 1px solid #ccc;
   border-radius: 8px;
   position: relative;
@@ -722,6 +848,38 @@ footer .footer-links a:hover {
     background-color: #e53e3e;
 }
 
+/* スマホ画面用 */
+@media (max-width: 600px) {
+    .item-card {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .item-name {
+        width: 100%;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .progress-control,
+    .select-for-myset {
+        align-self: flex-start;
+    }
+
+    .qty-control {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .qty{
+        width: 70%;
+    }
+
+    
+
+}
+
+
 /* チェックボックスは非表示 */
 .select-for-myset {
     display: none;
@@ -750,4 +908,545 @@ footer .footer-links a:hover {
     background: rgba(0, 0, 0, 0.25); /* 少し暗くする */
     backdrop-filter: blur(2px); /* ほんのりぼかし */
     z-index: 900;
+}
+
+/* ====== 天気情報表示用 ====== */
+/* 天気取得ボタンと最終取得テキストの配置 */
+.weather-acquisition {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.weather-acquisition small {
+  margin-left: 12px;
+  color: #666;
+}
+
+.weather-scroll {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    overflow-x: auto;
+    padding: 12px 0;
+}
+
+@media (max-width: 600px) {
+    .weather-scroll {
+        width: 70%;
+        margin-left: 50px;
+        margin-right: 0;
+        max-width: none;
+    }
+}
+
+.weather-box {
+    width: max-content;
+    display: flex;
+    gap: 20px;
+}
+
+.weather-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 80px;
+    flex: 0 0 auto;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.weather-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+}
+
+.weather-date {
+    font-weight: 500;
+    font-size: 12px;
+    margin-bottom: 2px;
+    color: #333;
+}
+
+.weather-icon i {
+    font-size: 22px;
+    color: #f4a259;
+    margin-bottom: 2px;
+}
+
+.weather-temp {
+    font-size: 11px;
+    color: #555;
+}
+
+.weather-temp .temp-max {
+    color: #e63946; /* 赤 */
+    font-weight: 600;
+}
+
+.weather-temp .temp-min {
+    color: #457b9d; /* 青 */
+    font-weight: 600;
+}
+
+/* ====== 天気モーダル表示用 ====== */
+/* モーダル用オーバーレイ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+/* 非表示 */
+.hidden {
+    display: none;
+}
+
+/* 中央の白いボックス */
+.modal-content {
+    position: relative;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* スマホ用調整 */
+@media (max-width: 600px) {
+
+  .modal-content {
+      width: 60%;
+      max-width: none;
+      padding: 16px;
+      border-radius: 10px;
+  }
+}
+
+/* ボタン並び */
+.modal-buttons {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: #226F54;
+    border-radius: 50%;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-close:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+}
+
+/* ====== マイセット表示用 ====== */
+
+/* カード風ブロック */
+.myset-block {
+    background: #6A994E;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 6px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    width: 600px;  
+    margin: 0 auto 10px;
+    max-width: 90%;
+}
+
+.myset-content {
+    background: #fff; 
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* 固定ヘッダー（タイトル＋ボタン）*/
+.myset-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 40px;
+}
+
+/* タイトル行 */
+.myset-title {
+    color: #333;
+    flex-grow: 1; 
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.toggle-items-btn {
+    background: transparent;
+    border: none;
+    color: #333;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 6px;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.toggle-items-btn:hover {
+    transform: scale(1.1); 
+    opacity: 0.8;
+}
+
+/* 中央ボタン */
+.apply-form {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 右側の編集/削除 */
+.edit-myset-btn {
+    display: flex;
+    align-items: center;
+}
+
+.delete-myset-btn {
+    display: flex;
+    align-items: center;
+}
+
+.delete-myset-btn svg, .edit-myset-btn svg {
+    font-size: 10px;
+    color: #333;
+    pointer-events: auto;
+    transition: 0.25s ease;
+}
+
+.delete-myset-btn:hover svg, .edit-myset-btn:hover svg {
+    transform: scale(1.1); /* ほんのり拡大 */
+}
+
+/* 非表示状態 */
+.myset-items.hidden {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+}
+
+.myset-items {
+    margin-top: 12px;
+    padding: 16px;
+    background: #F5F5F5;
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* アイテム行 */
+.item-line {
+    background: #e8f5e9; 
+    color: #2d572c;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    border: 1px solid #b7d7b5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 操作エリア（ボタン類） */
+.myset-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+/* スマホ用調整 */ 
+@media (max-width: 600px) {
+
+    .myset-header {
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+
+    /* 1行目：タイトル + トグルボタン */
+    .myset-title {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* ← 長いタイトルは ... 表示 */
+    }
+
+    .toggle-items-btn {
+        flex: 0 0 auto;
+    }
+
+    /* 2行目：追加ボタン + 編集 + 削除 を横並び */
+    .apply-form {
+        order: 2;    /* ← 行の順序を指定 */
+        flex: 1 1 100%;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .edit-myset-btn,
+    .delete-myset-btn {
+        order: 2;
+        flex: 0 0 auto;
+    }
+}
+
+
+/* ====== マイセット編集画面用 ====== */
+/* 全体コンテナ */
+#myset-items {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* カテゴリ名 */
+#myset-items h4 {
+    margin: 0 0 0 0;
+    color: #333;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* 各アイテム */
+.myset-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 6px 12px;
+    background: #fff;
+    border: 2px solid #6a994e;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    font-size: 14px;
+
+    box-sizing: border-box;
+    margin: 0 auto 4px;
+}
+
+/* 削除ボタン */
+.myset-item .delete-btn {
+    background: #e63946;
+    color: #fff;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.myset-item .delete-btn:hover {
+    background: #d62828;
+}
+
+/* スマホ用調整 */
+@media (max-width: 600px) {
+    .myset-item {
+        max-width: 80%;
+        padding: 8px 10px;
+    }
+    
+}
+
+/* ====== マイセットへの追加画面用 ====== */
+
+/* 全体コンテナ */
+.tab-wrapper {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    align-items: center;
+    margin: 0 auto;
+    gap: 16px;
+}
+
+/* カテゴリ名 */
+#items h4,
+#customs h4 {
+    margin: 0 0 0 0;
+    color: #333;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* 各アイテム */
+.item,
+.custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 500px;
+    width: 100%;
+    padding: 6px 12px;
+    background: #fff;
+    border: 2px solid #6a994e;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    font-size: 14px;
+    margin: 0 auto 4px;
+    box-sizing: border-box;
+
+}
+
+.tab-container {
+    background-color: transparent;
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+}
+
+/* スマホ用調整 */
+@media (max-width: 600px) {
+    .item,
+    .custom {
+        max-width: 100%;
+    }
+    
+}
+
+
+/* ====== カスタムアイテムリスト画面用 ====== */
+/* 全体コンテナ */
+.custom-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+/* カテゴリブロック */
+.custom-category-block {
+    width: 100%;
+    max-width: 520px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* カテゴリ名 */
+.custom-category-block > h4 {
+    margin: 0 0 3px 0;
+    color: #333;
+    font-size: 16px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* アイテム行 */
+.custom-item-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #fff;
+    border: 2px solid #6a994e;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* チェックボックス + アイテム名 */
+.custom-item-row input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* 削除ボタン */
+.custom-item-row .delete-btn {
+    margin-left: auto;
+    background-color: #e63946;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+/* ====== カスタムアイテム作成画面用 ====== */
+.custom-form-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+}
+
+/* 各フォームグループ */
+.custom-form-container .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 5px 0px 30px 0px;
+}
+
+/* ラベル */
+.custom-form-container label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+/* テキスト入力 */
+.custom-form-container input[type="text"],
+.custom-form-container select {
+    padding: 6px 10px;
+    border: 1.5px solid #6a994e;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.custom-form-container input[type="text"]:focus,
+.custom-form-container select:focus {
+    border-color: #527a3a;
 }
