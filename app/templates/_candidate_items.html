@@ -1,4 +1,5 @@
 <ul class="weather-item-list">
+{% if candidates and candidates|length > 0 %}
   {% for item in candidates %}
     <li>
       <label>
@@ -7,4 +8,9 @@
       </label>
     </li>
   {% endfor %}
+{% else %}
+    <div class="no-items">
+        現在追加できる天気アイテムはありません。
+    </div>
+{% endif %}
 </ul>
