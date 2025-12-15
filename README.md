@@ -56,12 +56,12 @@
 
 ---
 
-##　　データベース設計
+## データベース設計
 
 <details>
 <summary>ER図①：コア構造（旅行と持ち物生成）</summary>
 
-![ER Core](images/ER_Core.png)
+![ER Core](images/ER-Core.png)
 
 travel_items を中心に、旅行条件からの自動生成と
 ユーザー編集を両立する構造です。
@@ -71,7 +71,7 @@ travel_items を中心に、旅行条件からの自動生成と
 <details>
 <summary>ER図②：再利用・拡張構造</summary>
 
-![ER Extended](images/ER_Extended.png)
+![ER Extended](images/ER-Extended.png)
 
 マイセットや旅行目的など、再利用性と拡張性を担う構造です。
 
