@@ -265,7 +265,7 @@ PURPOSE_ITEM_DATA = {
         "ペット用フード", 
         "給水ボトル / 食器", 
         "ペット用毛布 / タオル", 
-        "ペット用トイレ / トイレシート"
+        "ペット用トイレ / トイレシート",
         "リード / ハーネス", 
         "ペット用ウェットティッシュ", 
         "おもちゃ", 
@@ -305,12 +305,12 @@ PURPOSE_ITEM_DATA = {
     ],
 
     "スキー・スノーボード": [
-        "スキーウェア"
+        "スキーウェア",
         "手袋",
         "帽子",
         "ゴーグル",
         "ネックウォーマー",
-        "ビニール袋"
+        "ビニール袋",
         "スキー / スノーボード板",   
         "ブーツ / スノーボードブーツ",
         "ストック（スキー用）",      
@@ -486,6 +486,15 @@ def seed_purpose_item():
     
     db.session.commit()
 
+def ensure_seed_data():
+    if Purpose.query.first():
+        return
+    
+    seed_purpose()
+    seed_item()
+    seed_purpose_item()
+
+# python seeds.py で初期データを投入
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
