@@ -11,6 +11,7 @@ bcrypt = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 flask-migrate = "*"
+gunicorn = "*"
 
 [dev-packages]
 
