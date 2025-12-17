@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 flask-migrate = "*"
 gunicorn = "*"
 flask-wtf = "*"
+requests = "*"
 
 [dev-packages]
 
